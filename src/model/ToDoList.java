@@ -1,33 +1,43 @@
 package model;
 
-import java.util.ArrayList;
+import exceptions.ListItemNotFoundException;
+
+import java.util.HashMap;
 
 public class ToDoList {
 
-    private ArrayList<ListItem> items;
+    private final HashMap<String, ListItem> items;
 
-    public void addListItem(ListItem item){
-        this.items.add(item);
+    public ToDoList(){
+        this.items = new HashMap<>();
     }
 
-    public void removeListItem(ListItem item){
-        this.items.remove(item);
+    public void addListItem(ListItem item){
+        this.items.put(item.getTitle(), item);
+    }
+
+    public boolean removeListItem(String title){
+        return items.remove(title) != null;
+
     }
 
     public void clearAllListItems(){
         this.items.clear();
     }
 
-    public ListItem getListItem(String listItemName){
-        for (ListItem item : items){
-            if (item.getTitle().equals(listItemName)){
-                return item; // Item found with this title, return it.
-            }
+    public ListItem getListItem(String listItemName)throws ListItemNotFoundException{
+        ListItem item = items.get(listItemName);
+        if (item != null){
+            return item;
         }
-        return null; // No item with this title exists
+        throw new ListItemNotFoundException("Item '" + listItemName + "' cannot be found");
     }
 
-    public ArrayList<ListItem> getAllListItems(){
+    public HashMap<String, ListItem> getAllListItems(){
         return this.items;
+    }
+
+    public void printAllListItems(){
+        items.values().forEach(System.out::println);
     }
 }

@@ -12,6 +12,6 @@ public class InputReader {
 
     public String getNextText(String message){
         System.out.println(message);
-        return scanner.next();
+        return scanner.nextLine();
     }
 }

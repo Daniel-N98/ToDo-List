@@ -9,6 +9,7 @@ public class ListItem {
     private String title;
     private String text;
     private LocalDateTime timestamp;
+    private LocalDateTime dueDate;
     private ItemStatus status;
 
     public ListItem(String title, String text, ItemStatus status){
@@ -42,6 +43,14 @@ public class ListItem {
         this.timestamp = timestamp;
     }
 
+    public LocalDateTime getDueDate(){
+        return this.dueDate != null ? this.dueDate : null;
+    }
+
+    public void setDueDate(LocalDateTime dueDate){
+        this.dueDate = dueDate;
+    }
+
     public ItemStatus getStatus(){
         return this.status;
     }
@@ -50,5 +59,14 @@ public class ListItem {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "ListItem{" +
+                "title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", timestamp=" + timestamp +
+                ", dueDate=" + dueDate.toString().replace("T", " ") +
+                ", status=" + status +
+                '}';
+    }
 }

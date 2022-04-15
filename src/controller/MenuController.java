@@ -3,56 +3,35 @@ package controller;
 import util.InputReader;
 
 public class MenuController {
-    private final ToDoController controller;
-    private final InputReader reader;
 
     public MenuController() {
-        this.controller = new ToDoController();
-        this.reader = new InputReader();
-
         String TITLE = """
                 Welcome to the TO-DO List application
                 To get started, enter one of the following options
                 
                 """;
         System.out.println(TITLE);
-        int option;
+    }
 
-        do {
-            String menu = """
+    public void printMainMenu(){
+        String menu = """
                     1. View your TO-DO list
                     2. Add to your TO-DO list
                     3. Remove from your TO-DO list
                     4. Clear TO-DO list
-                    5. Update TO-DO list""";
+                    5. Update TO-DO list
+                    """;
 
-            System.out.println(menu);
-
-            option = requestUserOption();
-
-        } while (option != 5);
+        System.out.println(menu);
     }
 
-    private int requestUserOption() {
-        int option;
-
+    public int requestUserOption(InputReader reader) {
         try {
-            option = Integer.parseInt(reader.getNextText("Enter an option:"));
-            return option;
+            return Integer.parseInt(reader.getNextText("Enter an option:")); // Option was parsed to an Integer, and can be returned
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid option");
-        }
-
-        return -1;
-    }
-
-    private void selectMenu(int option) {
-
-        switch (option) {
-            case 1 -> controller.printToDoList();
-            case 2 -> controller.createToDoItem();
-            case 3 -> controller.removeToDoItem();
-            case 4 -> controller.clearToDoList();
+            return -1; // Option was not of the correct data type
         }
     }
 }
