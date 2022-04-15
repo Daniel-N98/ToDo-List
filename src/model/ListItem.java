@@ -12,7 +12,23 @@ public class ListItem {
     private LocalDateTime dueDate;
     private ItemStatus status;
 
-    public ListItem(String title, String text, ItemStatus status){
+    /**
+     * Default constructor for the ListItem
+     * Instantiates the timestamp variable with the current date & time
+     */
+    public ListItem() {
+        this.timestamp = LocalDateTime.now(); // Instantiate the timestamp variable with the current date/time
+    }
+
+    /**
+     * Constructor for the ListItem
+     * Instantiates title, text, status and timestamp properties
+     *
+     * @param title  of the list item
+     * @param text   of the list item
+     * @param status of the list item (Default: PENDING)
+     */
+    public ListItem(String title, String text, ItemStatus status) {
         this.title = title;
         this.text = text;
         this.timestamp = LocalDateTime.now();
@@ -43,19 +59,19 @@ public class ListItem {
         this.timestamp = timestamp;
     }
 
-    public LocalDateTime getDueDate(){
+    public LocalDateTime getDueDate() {
         return this.dueDate != null ? this.dueDate : null;
     }
 
-    public void setDueDate(LocalDateTime dueDate){
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public ItemStatus getStatus(){
+    public ItemStatus getStatus() {
         return this.status;
     }
 
-    public void setStatus(ItemStatus status){
+    public void setStatus(ItemStatus status) {
         this.status = status;
     }
 
