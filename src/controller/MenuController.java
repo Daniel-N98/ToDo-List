@@ -2,11 +2,11 @@ package controller;
 
 import util.InputReader;
 
-public class Menu {
+public class MenuController {
     private final ToDoController controller;
     private final InputReader reader;
 
-    public Menu() {
+    public MenuController() {
         this.controller = new ToDoController();
         this.reader = new InputReader();
 
