@@ -33,6 +33,7 @@ public class ToDoListRepository {
 
     /**
      * Inserts a new ListItem into the database
+     *
      * @param item to add into the database
      */
     public void addListItem(ListItem item) {
@@ -49,7 +50,6 @@ public class ToDoListRepository {
             statement.setString(3, timestamp);
             statement.setString(4, dueDate);
             statement.setString(5, status.toString());
-
             statement.execute();
 
         } catch (SQLException e) {
@@ -59,12 +59,16 @@ public class ToDoListRepository {
 
     /**
      * Removes a ListItem from the database
-     * @param item to be removed from the database
+     *
+     * @param title to be removed from the database
      */
-    public void removeListItem(ListItem item) {
+    public void removeListItem(String title) throws ListItemNotFoundException {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist WHERE title=?");
-            statement.setString(1, item.getTitle());
+            statement.setString(1, title);
+            if (statement.executeUpdate() == 0) { // The amount of records returned == 0
+                throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -91,18 +95,28 @@ public class ToDoListRepository {
     public ListItem getItemByTitle(String title) throws ListItemNotFoundException {
         ListItem item;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM todolist.todolist");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM todolist.todolist where title=?");
+            statement.setString(1, title);
             ResultSet set = statement.executeQuery();
+            set.next(); // Move the ResultSet forward one
+
             item = new ListItem();
 
             item.setTitle(set.getString("title"));
             item.setText(set.getString("description"));
-            item.setTimestamp(DateParser.parseStringToLocalDateTime(set.getString("timestamp"), "yyyy-MM-dd HH:mm"));
-            item.setDueDate(DateParser.parseStringToLocalDateTime(set.getString("dueDate"), "yyyy-MM-dd HH:mm"));
+            String timeStamp = set.getString("timestamp").replace("T", " ");
+            String dueDate = set.getString("dueDate").replace("T", " ");
+
+            item.setTimestamp(DateParser.parseStringToLocalDateTime(timeStamp, "yyyy-MM-dd HH:mm:ss"));
+            if (!dueDate.equals("None")) {
+                item.setDueDate(DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"));
+            }
+            return item;
         } catch (InvalidDateTimeFormatException | SQLException e) {
-            throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
+            //throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
+            e.printStackTrace();
         }
-        return item;
+        return null;
     }
 
     /**
@@ -111,14 +125,13 @@ public class ToDoListRepository {
      * @param title of the list item
      * @return true if the item exists, false otherwise
      */
-    public boolean doesListItemExist(String title){
-        // TODO - Issue here, the execute method is returning true when no ListItem exists with the name.
-        //  Should return false if it doesn't exist, true if it does exist.
+    public boolean doesListItemExist(String title) {
         try {
             PreparedStatement statement = connection.prepareStatement("Select * from todolist.todolist WHERE title=?");
             statement.setString(1, title);
-            return statement.execute();
-        }catch (SQLException e){
+            return statement.executeQuery().next();
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -128,16 +141,16 @@ public class ToDoListRepository {
      *
      * @return listItems list of all items
      */
-    public List<ListItem> getAllListItems(){
+    public List<ListItem> getAllListItems() {
         List<ListItem> listItems = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("Select title from todolist.todolist");
             ResultSet set = statement.executeQuery();
-            while (set.next()){
+            while (set.next()) {
                 ListItem item = getItemByTitle(set.getString("title"));
                 listItems.add(item);
             }
-        }catch (SQLException | ListItemNotFoundException e){
+        } catch (SQLException | ListItemNotFoundException e) {
             e.printStackTrace();
         }
         return listItems;
