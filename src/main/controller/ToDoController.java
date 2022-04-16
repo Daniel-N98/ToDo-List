@@ -58,9 +58,9 @@ public class ToDoController {
      */
     public void removeToDoItem() {
         try {
-            toDoList.removeListItem(toDoList.getListItem(reader.getNextText("\nEnter the list item title")));
+            toDoList.removeListItem(reader.getNextText("\nEnter the list item title"));
             System.out.println("\nThe list item has been removed.");
-        } catch (ListItemNotFoundException e) {
+        }catch (ListItemNotFoundException e){
             e.printStackTrace();
         }
     }

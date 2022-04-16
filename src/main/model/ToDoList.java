@@ -59,10 +59,10 @@ public class ToDoList {
 
     /**
      * Removes a ListItem from the database
-     * @param item to be removed from the database
+     * @param title to be removed from the database
      */
-    public void removeListItem(ListItem item)  {
-        repository.removeListItem(item);
+    public void removeListItem(String title) throws ListItemNotFoundException {
+        repository.removeListItem(title);
     }
 
     /**
