@@ -98,22 +98,23 @@ public class ToDoListRepository {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM todolist.todolist where title=?");
             statement.setString(1, title);
             ResultSet set = statement.executeQuery();
-            set.next(); // Move the ResultSet forward one
+            if (set.next()) { // Move the ResultSet forward one
 
-            item = new ListItem();
+                item = new ListItem();
 
-            item.setTitle(set.getString("title"));
-            item.setText(set.getString("description"));
-            String timeStamp = set.getString("timestamp").replace("T", " ");
-            String dueDate = set.getString("dueDate").replace("T", " ");
+                item.setTitle(set.getString("title"));
+                item.setText(set.getString("description"));
+                String timeStamp = set.getString("timestamp").replace("T", " ");
+                String dueDate = set.getString("dueDate").replace("T", " ");
 
-            item.setTimestamp(DateParser.parseStringToLocalDateTime(timeStamp, "yyyy-MM-dd HH:mm:ss"));
-            if (!dueDate.equals("None")) {
-                item.setDueDate(DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"));
+                item.setTimestamp(DateParser.parseStringToLocalDateTime(timeStamp, "yyyy-MM-dd HH:mm:ss"));
+                if (!dueDate.equals("None")) {
+                    item.setDueDate(DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"));
+                }
+                return item;
             }
-            return item;
+            throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
         } catch (InvalidDateTimeFormatException | SQLException e) {
-            //throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
             e.printStackTrace();
         }
         return null;
@@ -154,5 +155,21 @@ public class ToDoListRepository {
             e.printStackTrace();
         }
         return listItems;
+    }
+
+    public void updateListItem(ListItem item){
+
+        try{
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO todolist.todolist (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
+            statement.setString(1, item.getTitle());
+            statement.setString(2, item.getText());
+            statement.setString(3, item.getTimestamp().toString());
+            statement.setString(4, (item.getDueDate() == null ? "None" : item.getDueDate().toString()));
+            statement.setString(5, item.getStatus().toString());
+            statement.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 }
