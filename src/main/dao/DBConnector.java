@@ -1,4 +1,4 @@
-package main.database;
+package main.dao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,20 +8,21 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class DBConnector {
+    private Connection connection;
 
-    public DBConnector(){
+    public DBConnector() {
         try {
             String[] details = getDbDetails();
-            if (details == null){
+            if (details == null) {
                 return;
-            }                                        // URL      Username     Password
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + details[0], details[1], details[2]);
-        }catch (SQLException e){
+            }
+            this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + details[0], details[1], details[2]);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    private String[] getDbDetails(){
+    private String[] getDbDetails() {
         try {
             String connFilePath = "src/resources/connParams.txt";
             Scanner scanner = new Scanner(new File(connFilePath));
@@ -31,9 +32,13 @@ public class DBConnector {
             details[1] = scanner.next();
             details[2] = scanner.next();
             return details;
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Connection getConnection() {
+        return this.connection;
     }
 }

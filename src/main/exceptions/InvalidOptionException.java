@@ -2,7 +2,7 @@ package main.exceptions;
 
 public class InvalidOptionException extends Exception {
 
-    public InvalidOptionException(String message){
+    public InvalidOptionException(String message) {
         super(message);
     }
 }
