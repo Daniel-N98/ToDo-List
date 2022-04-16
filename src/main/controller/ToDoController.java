@@ -28,7 +28,7 @@ public class ToDoController {
     public void addToDoItem() {
         try {
             toDoList.createListItem(reader);
-        }catch (ListItemAlreadyExists e){
+        } catch (ListItemAlreadyExists e) {
             e.printStackTrace();
         }
     }
@@ -36,7 +36,7 @@ public class ToDoController {
     public void removeToDoItem() {
         try {
             toDoList.removeListItem(reader);
-        }catch (ListItemNotFoundException e){
+        } catch (ListItemNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -103,11 +103,11 @@ public class ToDoController {
         }
     }
 
-    private void printItemBeingEdited(ListItem item){
+    private void printItemBeingEdited(ListItem item) {
         System.out.println("\nYou are editing: \n" + item.toString());
     }
 
-    private int printMenuReturnInput(String menu){
+    private int printMenuReturnInput(String menu) {
         System.out.println(menu);
         return menuController.requestUserOption(reader);
     }

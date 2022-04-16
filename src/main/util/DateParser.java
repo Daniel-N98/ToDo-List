@@ -12,7 +12,7 @@ public class DateParser {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         try {
             return LocalDateTime.parse(date, formatter);
-        }catch (DateTimeParseException e){
+        } catch (DateTimeParseException e) {
             throw new InvalidDateTimeFormatException("'" + date + "' is an invalid format. " + format);
         }
     }

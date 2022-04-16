@@ -1,8 +1,9 @@
 package main.model;
 
+import main.exceptions.InvalidDateTimeFormatException;
 import main.types.ItemStatus;
 import main.exceptions.InvalidItemStatusException;
-
+import main.util.DateParser;
 import java.time.LocalDateTime;
 
 public class ListItem {
@@ -33,7 +34,11 @@ public class ListItem {
     public ListItem(String title, String text, ItemStatus status) {
         this.title = title;
         this.text = text;
-        this.timestamp = LocalDateTime.now();
+        try {
+            this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().toString(), "yyyy-MM-dd HH:mm");
+        } catch (InvalidDateTimeFormatException e) {
+            e.printStackTrace();
+        }
         this.status = status;
     }
 

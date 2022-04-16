@@ -12,6 +12,7 @@ public class MenuController {
 
     /**
      * Get the main menu
+     *
      * @return mainMenu
      */
     public String getMainMenu() {
@@ -25,6 +26,7 @@ public class MenuController {
 
     /**
      * Get the item editor menu
+     *
      * @return itemEditorMenu
      */
     public String getItemEditorMenu() {
@@ -38,9 +40,10 @@ public class MenuController {
 
     /**
      * Get the status editor menu
+     *
      * @return statusEditorMenu
      */
-    public String getStatusEditorMenu(){
+    public String getStatusEditorMenu() {
         return """
                 \n1. PENDING
                 2. PROGRESS
