@@ -65,6 +65,10 @@ public class ToDoList {
         repository.removeListItem(title);
     }
 
+    public void updateListItem(ListItem item){
+        repository.updateListItem(item);
+    }
+
     /**
      * Removes all ListItem objects from the database
      */

@@ -92,10 +92,13 @@ public class ToDoController {
             int option;
 
             do {
+                toDoList.removeListItem(listItemSelected.getTitle()); // Remove the item whilst it is being edited
                 printItemBeingEdited(listItemSelected); // Print out the item that is being edited
                 option = printMenuReturnInput(menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
 
                 selectFromEditorMenu(listItemSelected, option); // Calls a method based on the option
+
+                toDoList.updateListItem(listItemSelected); // Replace the item
             } while (option != 5);
 
         } catch (ListItemNotFoundException e) {
