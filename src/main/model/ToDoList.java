@@ -1,12 +1,11 @@
-package model;
+package main.model;
 
-import exceptions.InvalidDateTimeFormatException;
-import exceptions.InvalidItemStatusException;
-import exceptions.ListItemAlreadyExists;
-import exceptions.ListItemNotFoundException;
-import types.ItemStatus;
-import util.DateParser;
-import util.InputReader;
+import main.exceptions.InvalidDateTimeFormatException;
+import main.exceptions.ListItemAlreadyExists;
+import main.exceptions.ListItemNotFoundException;
+
+import main.util.DateParser;
+import main.util.InputReader;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
