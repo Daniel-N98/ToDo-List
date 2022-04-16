@@ -1,70 +1,94 @@
 package main.model;
 
+import main.dao.ToDoListRepository;
 import main.exceptions.InvalidDateTimeFormatException;
-import main.exceptions.ListItemAlreadyExists;
+import main.exceptions.ListItemAlreadyExistsException;
 import main.exceptions.ListItemNotFoundException;
 
 import main.util.DateParser;
 import main.util.InputReader;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 
 public class ToDoList {
 
-    private final HashMap<String, ListItem> items;
+    // Repository for handling interacting with the backend
+    private final ToDoListRepository repository;
 
+    /**
+     * Constructor for the ToDoList class. Instantiates the ToDoListRepository
+     */
     public ToDoList() {
-        this.items = new HashMap<>();
+        this.repository = new ToDoListRepository();
     }
 
-    public void createListItem(InputReader reader) throws ListItemAlreadyExists {
+    /**
+     * Creates and returns a new ListItem object from user input.
+     * Checks that a ListItem with the same name does not already exist
+     * within the database
+     *
+     * @param reader to read user input
+     * @return listItem created from user input
+     * @throws ListItemAlreadyExistsException An item with this name already exists
+     */
+    public ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException {
         ListItem listItem = new ListItem();
 
-        String title = reader.getNextText("\nEnter the ToDo-List title"); // Request the title of the new item to be added
+        String title = reader.getNextText("\nEnter the list item title"); // Request the title of the new item to be added
         if (listItemExists(title)) { // Check the item with that title does not already exist
-            throw new ListItemAlreadyExists("An item with name '" + title + "' already exists"); // Item already exists, throw exception
+            throw new ListItemAlreadyExistsException("An item with name '" + title + "' already exists"); // Item already exists, throw exception
         }
 
-        String text = reader.getNextText("\nEnter the ToDo-List description");  // Request the description of the new item to be added
+        String text = reader.getNextText("\nEnter the list item description");  // Request the description of the new item to be added
 
         listItem.setTitle(title);
         listItem.setText(text);
         addDueDate(reader, listItem); // Asks the user to add a due date
 
-        addToDoListItem(listItem);
+        return listItem;
     }
 
-    private void addToDoListItem(ListItem item) {
-        this.items.put(item.getTitle(), item);
+    /**
+     * Adds a ListItem into the database
+     *
+     * @param item to be added to the database
+     */
+    public void addToDoListItem(ListItem item) {
+        this.repository.addListItem(item);
     }
 
-    public void removeListItem(InputReader reader) throws ListItemNotFoundException {
-        String title = reader.getNextText("\nEnter the ToDo-List title"); // Request the title of the item to be removed
-        if (items.remove(title) == null) {
-            throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
-        }
-        items.remove(title);
-        System.out.println("\nThe list item has been removed.");
+    /**
+     * Removes a ListItem from the database
+     * @param item to be removed from the database
+     */
+    public void removeListItem(ListItem item)  {
+        repository.removeListItem(item);
     }
 
+    /**
+     * Removes all ListItem objects from the database
+     */
     public void clearAllListItems() {
-        this.items.clear();
+        repository.removeAllItems();
     }
 
+    /**
+     * Finds a ListItem in the database by name
+     *
+     * @param listItemName to find in the database
+     * @return ListItem found
+     * @throws ListItemNotFoundException a ListItem could not be found
+     */
     public ListItem getListItem(String listItemName) throws ListItemNotFoundException {
-        ListItem item = items.get(listItemName);
-        if (item != null) {
-            return item;
-        }
-        throw new ListItemNotFoundException("Item '" + listItemName + "' cannot be found");
+        return repository.getItemByTitle(listItemName);
     }
 
-    public HashMap<String, ListItem> getAllListItems() {
-        return this.items;
-    }
-
-
+    /**
+     * Requests a due date from the user and applies it to the ListItem parameter
+     *
+     * @param reader to read user input
+     * @param listItem to apply the due date to
+     */
     public void addDueDate(InputReader reader, ListItem listItem) {
         String dueDate = reader.getNextText("\nEnter the due date using format [yyyy-MM-dd HH:mm][Leave blank if none]");
         if (dueDate.length() == 0) return; // No due date was provided, return
@@ -76,11 +100,20 @@ public class ToDoList {
         }
     }
 
+    /**
+     * Prints all ListItem objects found in the database
+     */
     public void printAllListItems() {
-        getAllListItems().values().forEach(System.out::println);
+        repository.getAllListItems().forEach(System.out::println);
     }
 
+    /**
+     * Returns whether a ListItem is present in the database
+     *
+     * @param title to find in the database
+     * @return true if a ListItem is found with that name
+     */
     private boolean listItemExists(String title) {
-        return items.containsKey(title);
+        return repository.doesListItemExist(title);
     }
 }

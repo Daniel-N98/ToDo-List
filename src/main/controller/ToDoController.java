@@ -5,17 +5,32 @@ import main.model.ToDoList;
 import main.types.ItemStatus;
 import main.util.InputReader;
 import main.exceptions.InvalidItemStatusException;
-import main.exceptions.ListItemAlreadyExists;
+import main.exceptions.ListItemAlreadyExistsException;
 import main.model.ListItem;
 
 public class ToDoController {
+
     private final InputReader reader;
     private final ToDoList toDoList;
     private final MenuController menuController = new MenuController(); // Instantiate the MenuController
 
+    /**
+     * Constructor for the ToDoController class
+     * Instantiates global variables and begins the application
+     */
     public ToDoController() {
         this.reader = new InputReader(); // Instantiate the InputReader
         this.toDoList = new ToDoList();
+
+        start();
+    }
+
+    /**
+     * Begins the application by printing the Title,
+     * and printing the main menu to the user.
+     * Passes the option selected by the user
+     */
+    private void start() {
         int option;
 
         System.out.println(MenuController.TITLE);
@@ -25,30 +40,50 @@ public class ToDoController {
         } while (option != 6);
     }
 
+    /**
+     * Attempts to add a new ListItem into the database
+     */
     public void addToDoItem() {
         try {
-            toDoList.createListItem(reader);
-        } catch (ListItemAlreadyExists e) {
+            ListItem item = toDoList.createListItem(reader); // Creates the ListItem from user input
+            toDoList.addToDoListItem(item); // Stores the ListItem in the database
+            System.out.println("List item has been created");
+        } catch (ListItemAlreadyExistsException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Attempts to remove a ListItem from the database
+     */
     public void removeToDoItem() {
         try {
-            toDoList.removeListItem(reader);
+            toDoList.removeListItem(toDoList.getListItem(reader.getNextText("\nEnter the list item title")));
+            System.out.println("\nThe list item has been removed.");
         } catch (ListItemNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Prints all ListItem objects from the database
+     */
     public void printToDoList() {
         toDoList.printAllListItems(); // Print all the list items to the console
     }
 
+    /**
+     * Clears all ListItem objects from the database
+     */
     public void clearToDoList() {
         toDoList.clearAllListItems(); // Remove all items from the ToDoList
     }
 
+    /**
+     * Attempts to update a ListItem based on the user input
+     * <p>
+     * TODO - Save the ListItem into the database once it has been edited
+     */
     public void updateToDoList() {
 
         ListItem listItemSelected;
@@ -68,6 +103,11 @@ public class ToDoController {
         }
     }
 
+    /**
+     * Attempts to update the status of a ListItem
+     *
+     * @param item to update
+     */
     public void updateItemStatus(ListItem item) {
         int option;
         printItemBeingEdited(item);
@@ -83,7 +123,11 @@ public class ToDoController {
         }
     }
 
-
+    /**
+     * Selects the correct method based on the passed parameter
+     *
+     * @param option to select
+     */
     private void selectMenu(int option) {
         switch (option) {
             case 1 -> printToDoList();
@@ -94,19 +138,36 @@ public class ToDoController {
         }
     }
 
+    /**
+     * Edits the ListItem based on user input
+     *
+     * @param listItem item to edit
+     * @param option   to select
+     */
     private void selectFromEditorMenu(ListItem listItem, int option) {
         switch (option) {
-            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new title")); // Sets the item title with the value returned from the reader
+            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new list item title")); // Sets the item title with the value returned from the reader
             case 2 -> listItem.setText(reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
             case 3 -> toDoList.addDueDate(reader, listItem); // Sets the item due date with the value returned from the reader
             case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
     }
 
+    /**
+     * Prints out the ListItem parameter to show what ListItem is being edited
+     *
+     * @param item to print out
+     */
     private void printItemBeingEdited(ListItem item) {
         System.out.println("\nYou are editing: \n" + item.toString());
     }
 
+    /**
+     * Prints out the passed menu and returns the users next input
+     *
+     * @param menu to print out
+     * @return int provided by the user
+     */
     private int printMenuReturnInput(String menu) {
         System.out.println(menu);
         return menuController.requestUserOption(reader);
