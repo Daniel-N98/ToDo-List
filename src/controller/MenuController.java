@@ -11,47 +11,41 @@ public class MenuController {
             """;
 
     /**
-     * Constructor for the MenuController class
+     * Get the main menu
+     * @return mainMenu
      */
-    public MenuController() {
-    }
-
-    /**
-     * Print out the main menu to console
-     */
-    public void printMainMenu() {
-        String menu = """
+    public String getMainMenu() {
+        return """
                 \n1. View your TO-DO list
                 2. Add to your TO-DO list
                 3. Remove from your TO-DO list
                 4. Clear TO-DO list
                 5. Update TO-DO list""";
-
-        System.out.println(menu);
     }
 
     /**
-     * Print out the item editor menu to console
+     * Get the item editor menu
+     * @return itemEditorMenu
      */
-    public void printItemEditorMenu() {
-        String itemEditorMenu = """
+    public String getItemEditorMenu() {
+        return """
                 \n1. Edit title
                 2. Edit description
                 3. Edit due date
                 4. Edit status
                 5. Cancel""";
-
-        System.out.println(itemEditorMenu);
     }
 
-    public void printStatusEditor(){
-        String statusTypes = """
+    /**
+     * Get the status editor menu
+     * @return statusEditorMenu
+     */
+    public String getStatusEditorMenu(){
+        return """
                 \n1. PENDING
                 2. PROGRESS
                 3. COMPLETE
                 4. Return to item editor""";
-
-        System.out.println(statusTypes);
     }
 
     /**

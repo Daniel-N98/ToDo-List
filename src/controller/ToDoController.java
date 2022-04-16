@@ -20,9 +20,7 @@ public class ToDoController {
 
         System.out.println(MenuController.TITLE);
         do {
-            menuController.printMainMenu(); // Prints out the main menu
-            option = menuController.requestUserOption(this.reader); // Returns user input
-
+            option = printMenuReturnInput(menuController.getMainMenu()); // Prints out the provided menu, and returns the input from the user
             selectMenu(option); // Select the menu based on user input
         } while (option != 6);
     }
@@ -44,7 +42,7 @@ public class ToDoController {
     }
 
     public void printToDoList() {
-        toDoList.printAllListItems();
+        toDoList.printAllListItems(); // Print all the list items to the console
     }
 
     public void clearToDoList() {
@@ -52,17 +50,17 @@ public class ToDoController {
     }
 
     public void updateToDoList() {
-        String title = reader.getNextText("\nEnter the ToDo-List title"); // Request the title of the item to be updated
+
         ListItem listItemSelected;
         try {
-            listItemSelected = toDoList.getListItem(title); // Attempt to retrieve a list item with the passed title
+            listItemSelected = toDoList.getListItem(reader.getNextText("\nEnter the list item title")); // Attempt to retrieve a list item with the passed title
             int option;
 
             do {
-                printItemBeingEdited(listItemSelected);
-                menuController.printItemEditorMenu();
-                option = menuController.requestUserOption(reader);
-                selectFromEditorMenu(listItemSelected, option);
+                printItemBeingEdited(listItemSelected); // Print out the item that is being edited
+                option = printMenuReturnInput(menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
+
+                selectFromEditorMenu(listItemSelected, option); // Calls a method based on the option
             } while (option != 5);
 
         } catch (ListItemNotFoundException e) {
@@ -73,13 +71,12 @@ public class ToDoController {
     public void updateItemStatus(ListItem item) {
         int option;
         printItemBeingEdited(item);
-        menuController.printStatusEditor();
-        option = menuController.requestUserOption(reader);
+        option = printMenuReturnInput(menuController.getStatusEditorMenu());
 
         if (option < 4 && option > 0) {
             try {
-                ItemStatus status = ItemStatus.getStatus(option - 1);
-                item.setStatus(status);
+                ItemStatus status = ItemStatus.getStatus(option - 1); // Retrieve the ItemStatus at the index specified.
+                item.setStatus(status); // Update the items status
             } catch (InvalidItemStatusException e) {
                 e.printStackTrace();
             }
@@ -99,14 +96,19 @@ public class ToDoController {
 
     private void selectFromEditorMenu(ListItem listItem, int option) {
         switch (option) {
-            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new title"));
-            case 2 -> listItem.setText(reader.getNextText("\nEnter a new description"));
-            case 3 -> toDoList.addDueDate(reader, listItem);
-            case 4 -> updateItemStatus(listItem);
+            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new title")); // Sets the item title with the value returned from the reader
+            case 2 -> listItem.setText(reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
+            case 3 -> toDoList.addDueDate(reader, listItem); // Sets the item due date with the value returned from the reader
+            case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
     }
 
     private void printItemBeingEdited(ListItem item){
         System.out.println("\nYou are editing: \n" + item.toString());
+    }
+
+    private int printMenuReturnInput(String menu){
+        System.out.println(menu);
+        return menuController.requestUserOption(reader);
     }
 }

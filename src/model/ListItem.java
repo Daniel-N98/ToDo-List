@@ -19,6 +19,7 @@ public class ListItem {
      */
     public ListItem() {
         this.timestamp = LocalDateTime.now(); // Instantiate the timestamp variable with the current date/time
+        this.status = ItemStatus.PENDING;
     }
 
     /**
