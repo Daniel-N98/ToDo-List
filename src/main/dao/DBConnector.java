@@ -8,9 +8,22 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class DBConnector {
+
     private Connection connection;
 
+    /**
+     * Constructor for the DBConnector class
+     * begins the connection process
+     */
     public DBConnector() {
+        connect();
+    }
+
+    /**
+     * Attempts to connect to the database with the details in the String[]
+     * Instantiates the Connection variable with the connection if successful
+     */
+    private void connect(){
         try {
             String[] details = getDbDetails();
             if (details == null) {
@@ -22,6 +35,11 @@ public class DBConnector {
         }
     }
 
+    /**
+     * Reads the connParams.txt file with a delimiter, and stores the details in a String[].
+     *
+     * @return details from connParams.txt
+     */
     private String[] getDbDetails() {
         try {
             String connFilePath = "src/resources/connParams.txt";
@@ -38,6 +56,11 @@ public class DBConnector {
         return null;
     }
 
+    /**
+     * Get the connection
+     *
+     * @return connection
+     */
     public Connection getConnection() {
         return this.connection;
     }

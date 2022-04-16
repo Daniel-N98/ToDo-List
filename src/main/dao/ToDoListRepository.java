@@ -11,15 +11,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ToDoListRepository {
 
+    /*
+     *  The purpose of the ToDoListRepository class is to handle all interactions between the application,
+     *  and the todolist table in the database.
+     */
+
     private final Connection connection;
 
+    /**
+     * Constructor for the ToDoListRepository
+     * Instantiates the DBConnector
+     */
     public ToDoListRepository() {
         this.connection = new DBConnector().getConnection();
     }
 
+    /**
+     * Inserts a new ListItem into the database
+     * @param item to add into the database
+     */
     public void addListItem(ListItem item) {
         String title = item.getTitle();
         String description = item.getText();
@@ -42,6 +57,10 @@ public class ToDoListRepository {
         }
     }
 
+    /**
+     * Removes a ListItem from the database
+     * @param item to be removed from the database
+     */
     public void removeListItem(ListItem item) {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist WHERE title=?");
@@ -51,16 +70,26 @@ public class ToDoListRepository {
         }
     }
 
+    /**
+     * Removes all items from the todolist table in the database
+     */
     public void removeAllItems() {
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist");
+            statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public ListItem getItemByTitle(String title){
-        ListItem item = null;
+    /**
+     * Searches for a ListItem in the database, and returns it
+     *
+     * @param title of the ListItem
+     * @return ListItem or null
+     */
+    public ListItem getItemByTitle(String title) throws ListItemNotFoundException {
+        ListItem item;
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM todolist.todolist");
             ResultSet set = statement.executeQuery();
@@ -71,8 +100,44 @@ public class ToDoListRepository {
             item.setTimestamp(DateParser.parseStringToLocalDateTime(set.getString("timestamp"), "yyyy-MM-dd HH:mm"));
             item.setDueDate(DateParser.parseStringToLocalDateTime(set.getString("dueDate"), "yyyy-MM-dd HH:mm"));
         } catch (InvalidDateTimeFormatException | SQLException e) {
-            e.printStackTrace();
+            throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
         }
         return item;
+    }
+
+    /**
+     * Checks whether a list item is present within the todolist table
+     *
+     * @param title of the list item
+     * @return true if the item exists, false otherwise
+     */
+    public boolean doesListItemExist(String title){
+        try {
+            PreparedStatement statement = connection.prepareStatement("Select * from todolist.todolist WHERE title=?");
+            statement.setString(1, title);
+            return statement.execute();
+        }catch (SQLException e){
+            return false;
+        }
+    }
+
+    /**
+     * Get all list items from within the todolist table
+     *
+     * @return listItems list of all items
+     */
+    public List<ListItem> getAllListItems(){
+        List<ListItem> listItems = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("Select title from todolist.todolist");
+            ResultSet set = statement.executeQuery();
+            while (set.next()){
+                ListItem item = getItemByTitle(set.getString("title"));
+                listItems.add(item);
+            }
+        }catch (SQLException | ListItemNotFoundException e){
+            e.printStackTrace();
+        }
+        return listItems;
     }
 }

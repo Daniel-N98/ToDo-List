@@ -1,18 +1,23 @@
 package main.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.exceptions.InvalidDateTimeFormatException;
 import main.types.ItemStatus;
 import main.exceptions.InvalidItemStatusException;
 import main.util.DateParser;
+
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 public class ListItem {
 
     private String title;
-    private String text;
-    private LocalDateTime timestamp;
-    private LocalDateTime dueDate;
-    private ItemStatus status;
+    private String text; //
+    private LocalDateTime timestamp; // Date/Time that the ListItem was created
+    private LocalDateTime dueDate; // Due date for the ListItem
+    private ItemStatus status; // The status of the ListItem
 
     /**
      * Default constructor for the ListItem
@@ -42,50 +47,25 @@ public class ListItem {
         this.status = status;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public LocalDateTime getDueDate() {
-        return this.dueDate != null ? this.dueDate : null;
-    }
-
-    public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
-    }
-
-    public ItemStatus getStatus() {
-        return this.status;
-    }
-
+    /**
+     * Sets the status of the ListItem
+     *
+     * @param status to set
+     * @throws InvalidItemStatusException invalid Status provided
+     */
     public void setStatus(ItemStatus status) throws InvalidItemStatusException {
-        if (status == null){
+        if (status == null) {
             throw new InvalidItemStatusException("Invalid status provided");
         }
         System.out.println("\nItem status has been updated: [" + this.status + "]" + " -> " + "[" + status + "]");
         this.status = status;
     }
 
+    /**
+     * Returns a readable version of this object
+     *
+     * @return String
+     */
     @Override
     public String toString() {
         return "\nListItem{" +

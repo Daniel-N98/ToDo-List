@@ -4,6 +4,7 @@ import main.util.InputReader;
 
 public class MenuController {
 
+    // The welcome message for the application
     public final static String TITLE = """
             \nWelcome to the TO-DO List application
             To get started, enter one of the following options
