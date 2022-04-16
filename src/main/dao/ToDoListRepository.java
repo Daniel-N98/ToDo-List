@@ -112,6 +112,8 @@ public class ToDoListRepository {
      * @return true if the item exists, false otherwise
      */
     public boolean doesListItemExist(String title){
+        // TODO - Issue here, the execute method is returning true when no ListItem exists with the name.
+        //  Should return false if it doesn't exist, true if it does exist.
         try {
             PreparedStatement statement = connection.prepareStatement("Select * from todolist.todolist WHERE title=?");
             statement.setString(1, title);
