@@ -1,7 +1,7 @@
-package model;
+package main.model;
 
-import exceptions.InvalidItemStatusException;
-import types.ItemStatus;
+import main.types.ItemStatus;
+import main.exceptions.InvalidItemStatusException;
 
 import java.time.LocalDateTime;
 

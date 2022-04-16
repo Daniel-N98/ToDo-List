@@ -1,4 +1,4 @@
-package repo;
+package main.repo;
 
 public class ToDoRepo {
     /* TODO - Setup database connection and create base tables for storing
