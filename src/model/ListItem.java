@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.InvalidItemStatusException;
 import types.ItemStatus;
 
 import java.time.LocalDateTime;
@@ -71,7 +72,11 @@ public class ListItem {
         return this.status;
     }
 
-    public void setStatus(ItemStatus status) {
+    public void setStatus(ItemStatus status) throws InvalidItemStatusException {
+        if (status == null){
+            throw new InvalidItemStatusException("Invalid status provided");
+        }
+        System.out.println("\nItem status has been updated: [" + this.status + "]" + " -> " + "[" + status + "]");
         this.status = status;
     }
 
@@ -83,6 +88,6 @@ public class ListItem {
                 ", timestamp=" + timestamp +
                 (dueDate != null ? ", dueDate=" + dueDate.toString().replace("T", " ") : "") +
                 ", status=" + status +
-                "}\n";
+                "}";
     }
 }

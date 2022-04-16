@@ -1,8 +1,11 @@
 package controller;
 
+import exceptions.InvalidItemStatusException;
+import exceptions.ListItemAlreadyExists;
 import exceptions.ListItemNotFoundException;
 import model.ListItem;
 import model.ToDoList;
+import types.ItemStatus;
 import util.InputReader;
 
 public class ToDoController {
@@ -25,11 +28,19 @@ public class ToDoController {
     }
 
     public void addToDoItem() {
-        toDoList.createListItem(reader);
+        try {
+            toDoList.createListItem(reader);
+        }catch (ListItemAlreadyExists e){
+            e.printStackTrace();
+        }
     }
 
     public void removeToDoItem() {
-        System.out.println("The list item " + (!toDoList.removeListItem(reader) ? "has not " : "has ") + "been removed.");
+        try {
+            toDoList.removeListItem(reader);
+        }catch (ListItemNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
     public void printToDoList() {
@@ -41,20 +52,37 @@ public class ToDoController {
     }
 
     public void updateToDoList() {
-        String title = reader.getNextText("Enter the ToDo-List title"); // Request the title of the item to be updated
+        String title = reader.getNextText("\nEnter the ToDo-List title"); // Request the title of the item to be updated
         ListItem listItemSelected;
         try {
             listItemSelected = toDoList.getListItem(title); // Attempt to retrieve a list item with the passed title
             int option;
 
             do {
+                printItemBeingEdited(listItemSelected);
                 menuController.printItemEditorMenu();
                 option = menuController.requestUserOption(reader);
                 selectFromEditorMenu(listItemSelected, option);
-            } while (option != 4);
+            } while (option != 5);
 
         } catch (ListItemNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void updateItemStatus(ListItem item) {
+        int option;
+        printItemBeingEdited(item);
+        menuController.printStatusEditor();
+        option = menuController.requestUserOption(reader);
+
+        if (option < 4 && option > 0) {
+            try {
+                ItemStatus status = ItemStatus.getStatus(option - 1);
+                item.setStatus(status);
+            } catch (InvalidItemStatusException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -71,9 +99,14 @@ public class ToDoController {
 
     private void selectFromEditorMenu(ListItem listItem, int option) {
         switch (option) {
-            case 1 -> listItem.setTitle(reader.getNextText("Enter a new title"));
-            case 2 -> listItem.setText(reader.getNextText("Enter a new description"));
+            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new title"));
+            case 2 -> listItem.setText(reader.getNextText("\nEnter a new description"));
             case 3 -> toDoList.addDueDate(reader, listItem);
+            case 4 -> updateItemStatus(listItem);
         }
+    }
+
+    private void printItemBeingEdited(ListItem item){
+        System.out.println("\nYou are editing: \n" + item.toString());
     }
 }
