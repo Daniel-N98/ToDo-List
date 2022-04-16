@@ -37,19 +37,9 @@ public class ToDoListRepository {
      * @param item to add into the database
      */
     public void addListItem(ListItem item) {
-        String title = item.getTitle();
-        String description = item.getText();
-        String timestamp = item.getTimestamp().truncatedTo(ChronoUnit.SECONDS).toString();
-        String dueDate = (item.getDueDate() == null ? "None" : item.getDueDate().toString());
-        ItemStatus status = item.getStatus();
-
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO todolist.todolist (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
-            statement.setString(1, title);
-            statement.setString(2, description);
-            statement.setString(3, timestamp);
-            statement.setString(4, dueDate);
-            statement.setString(5, status.toString());
+            addItemToStatementParams(statement, item);
             statement.execute();
 
         } catch (SQLException e) {
@@ -157,19 +147,40 @@ public class ToDoListRepository {
         return listItems;
     }
 
+    /**
+     * Updates a ListItem in the database
+     *
+     * @param item to replace with
+     */
     public void updateListItem(ListItem item){
-
         try{
             PreparedStatement statement = connection.prepareStatement("INSERT INTO todolist.todolist (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
-            statement.setString(1, item.getTitle());
-            statement.setString(2, item.getText());
-            statement.setString(3, item.getTimestamp().toString());
-            statement.setString(4, (item.getDueDate() == null ? "None" : item.getDueDate().toString()));
-            statement.setString(5, item.getStatus().toString());
+            addItemToStatementParams(statement, item);
             statement.execute();
 
         }catch (SQLException e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Add ListItem variables as parameters to the provided statement
+     *
+     * @param statement to add ListItem variables to
+     * @param item to add variables from
+     * @throws SQLException error
+     */
+    private void addItemToStatementParams(PreparedStatement statement, ListItem item) throws SQLException {
+        String title = item.getTitle();
+        String description = item.getText();
+        String timestamp = item.getTimestamp().truncatedTo(ChronoUnit.SECONDS).toString();
+        String dueDate = (item.getDueDate() == null ? "None" : item.getDueDate().toString());
+
+        ItemStatus status = item.getStatus();
+        statement.setString(1, title);
+        statement.setString(2, description);
+        statement.setString(3, timestamp);
+        statement.setString(4, dueDate);
+        statement.setString(5, status.toString());
     }
 }
