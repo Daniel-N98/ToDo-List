@@ -21,7 +21,7 @@ public class ToDoListRepository {
      *  and the todolist table in the database.
      */
 
-    private final Connection connection;
+    private Connection connection;
 
     /**
      * Constructor for the ToDoListRepository
@@ -53,14 +53,18 @@ public class ToDoListRepository {
      * @param title to be removed from the database
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
+        connection = new DBConnector().getConnection();
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList WHERE title=?");
-            statement.setString(1, title);
-            if (statement.executeUpdate() == 0) { // The amount of records returned == 0
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList WHERE title=" + title);
+            //statement.setString(1, title);
+
+            if (statement.executeUpdate() == 0) {
                 throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection();
         }
     }
 
@@ -111,6 +115,14 @@ public class ToDoListRepository {
         return null;
     }
 
+    private void closeConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Checks whether a list item is present within the todolist table
      *
@@ -153,13 +165,13 @@ public class ToDoListRepository {
      *
      * @param item to replace with
      */
-    public void updateListItem(ListItem item){
-        try{
+    public void updateListItem(ListItem item) {
+        try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
             statement.execute();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -168,7 +180,7 @@ public class ToDoListRepository {
      * Add ListItem variables as parameters to the provided statement
      *
      * @param statement to add ListItem variables to
-     * @param item to add variables from
+     * @param item      to add variables from
      * @throws SQLException error
      */
     private void addItemToStatementParams(PreparedStatement statement, ListItem item) throws SQLException {
