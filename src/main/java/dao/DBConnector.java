@@ -29,7 +29,9 @@ public class DBConnector {
             if (details == null) {
                 return;
             }
-            this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + details[0], details[1], details[2]);
+            //String url = "jdbc:mysql://localhost:3306/";
+            String url  = "jdbc:mysql://sql4.freesqldatabase.com/";
+            this.connection = DriverManager.getConnection(url + details[0], details[1], details[2]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
