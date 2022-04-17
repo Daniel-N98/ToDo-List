@@ -1,5 +1,6 @@
 package model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import exceptions.InvalidDateTimeFormatException;
@@ -13,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class ListItem {
 
     private String title;
