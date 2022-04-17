@@ -1,10 +1,10 @@
-package main.dao;
+package dao;
 
-import main.exceptions.InvalidDateTimeFormatException;
-import main.exceptions.ListItemNotFoundException;
-import main.model.ListItem;
-import main.types.ItemStatus;
-import main.util.DateParser;
+import exceptions.InvalidDateTimeFormatException;
+import exceptions.ListItemNotFoundException;
+import model.ListItem;
+import types.ItemStatus;
+import util.DateParser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -67,7 +67,8 @@ public class ToDoListRepository {
     /**
      * Removes all items from the todolist table in the database
      */
-    public void removeAllItems() {
+    @SuppressWarnings("SqlWithoutWhere") // Suppress the IDE from showing a warning for the 'delete query'.
+    public void removeAllItems() {       // In this situation, we are sure we want to clear it.
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist");
             statement.execute();

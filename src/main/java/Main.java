@@ -1,6 +1,4 @@
-package main;
-
-import main.controller.ToDoController;
+import controller.ToDoController;
 
 public class Main {
 

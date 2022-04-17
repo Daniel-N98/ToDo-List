@@ -1,6 +1,7 @@
-package main.util;
+package util;
 
-import main.exceptions.InvalidDateTimeFormatException;
+
+import exceptions.InvalidDateTimeFormatException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

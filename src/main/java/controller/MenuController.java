@@ -1,6 +1,6 @@
-package main.controller;
+package controller;
 
-import main.util.InputReader;
+import util.InputReader;
 
 public class MenuController {
 

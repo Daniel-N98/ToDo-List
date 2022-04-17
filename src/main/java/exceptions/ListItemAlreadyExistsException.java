@@ -1,4 +1,4 @@
-package main.exceptions;
+package exceptions;
 
 public class ListItemAlreadyExistsException extends Exception {
     public ListItemAlreadyExistsException(String message) {

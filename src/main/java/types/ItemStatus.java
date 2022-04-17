@@ -1,6 +1,6 @@
-package main.types;
+package types;
 
-import main.exceptions.InvalidItemStatusException;
+import exceptions.InvalidItemStatusException;
 
 public enum ItemStatus {
     PENDING,
