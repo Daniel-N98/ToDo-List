@@ -35,7 +35,7 @@ public class ToDoController {
 
         System.out.println(MenuController.TITLE);
         do {
-            option = printMenuReturnInput(menuController.getMainMenu()); // Prints out the provided menu, and returns the input from the user
+            option = printMenuReturnInput(this.menuController.getMainMenu()); // Prints out the provided menu, and returns the input from the user
             selectMenu(option); // Select the menu based on user input
         } while (option != 6);
     }
@@ -45,8 +45,8 @@ public class ToDoController {
      */
     public void addToDoItem() {
         try {
-            ListItem item = toDoList.createListItem(reader); // Creates the ListItem from user input
-            toDoList.addToDoListItem(item); // Stores the ListItem in the database
+            ListItem item = this.toDoList.createListItem(this.reader); // Creates the ListItem from user input
+            this.toDoList.addToDoListItem(item); // Stores the ListItem in the database
             System.out.println("List item has been created");
         } catch (ListItemAlreadyExistsException e) {
             e.printStackTrace();
@@ -58,7 +58,7 @@ public class ToDoController {
      */
     public void removeToDoItem() {
         try {
-            toDoList.removeListItem(reader.getNextText("\nEnter the list item title"));
+            this.toDoList.removeListItem(this.reader.getNextText("\nEnter the list item title"));
             System.out.println("\nThe list item has been removed.");
         }catch (ListItemNotFoundException e){
             e.printStackTrace();
@@ -69,14 +69,14 @@ public class ToDoController {
      * Prints all ListItem objects from the database
      */
     public void printToDoList() {
-        toDoList.printAllListItems(); // Print all the list items to the console
+        this.toDoList.printAllListItems(); // Print all the list items to the console
     }
 
     /**
      * Clears all ListItem objects from the database
      */
     public void clearToDoList() {
-        toDoList.clearAllListItems(); // Remove all items from the ToDoList
+        this.toDoList.clearAllListItems(); // Remove all items from the ToDoList
     }
 
     /**
@@ -86,17 +86,17 @@ public class ToDoController {
 
         ListItem listItemSelected;
         try {
-            listItemSelected = toDoList.getListItem(reader.getNextText("\nEnter the list item title")); // Attempt to retrieve a list item with the passed title
+            listItemSelected = this.toDoList.getListItem(this.reader.getNextText("\nEnter the list item title")); // Attempt to retrieve a list item with the passed title
             int option;
 
             do {
-                toDoList.removeListItem(listItemSelected.getTitle()); // Remove the item whilst it is being edited
+                this.toDoList.removeListItem(listItemSelected.getTitle()); // Remove the item whilst it is being edited
                 printItemBeingEdited(listItemSelected); // Print out the item that is being edited
-                option = printMenuReturnInput(menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
+                option = printMenuReturnInput(this.menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
 
                 selectFromEditorMenu(listItemSelected, option); // Calls a method based on the option
 
-                toDoList.updateListItem(listItemSelected); // Replace the item
+                this.toDoList.updateListItem(listItemSelected); // Replace the item
             } while (option != 5);
 
         } catch (ListItemNotFoundException e) {
@@ -112,7 +112,7 @@ public class ToDoController {
     public void updateItemStatus(ListItem item) {
         int option;
         printItemBeingEdited(item);
-        option = printMenuReturnInput(menuController.getStatusEditorMenu());
+        option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
 
         if (option < 4 && option > 0) {
             try {
@@ -147,9 +147,9 @@ public class ToDoController {
      */
     private void selectFromEditorMenu(ListItem listItem, int option) {
         switch (option) {
-            case 1 -> listItem.setTitle(reader.getNextText("\nEnter a new list item title")); // Sets the item title with the value returned from the reader
-            case 2 -> listItem.setText(reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
-            case 3 -> toDoList.addDueDate(reader, listItem); // Sets the item due date with the value returned from the reader
+            case 1 -> listItem.setTitle(this.reader.getNextText("\nEnter a new list item title")); // Sets the item title with the value returned from the reader
+            case 2 -> listItem.setText(this.reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
+            case 3 -> this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
             case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
     }
@@ -171,6 +171,6 @@ public class ToDoController {
      */
     private int printMenuReturnInput(String menu) {
         System.out.println(menu);
-        return menuController.requestUserOption(reader);
+        return this.menuController.requestUserOption(this.reader);
     }
 }
