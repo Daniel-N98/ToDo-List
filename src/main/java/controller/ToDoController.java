@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidDateTimeFormatException;
 import exceptions.ListItemNotFoundException;
 import model.ToDoList;
 import types.ItemStatus;
@@ -48,7 +49,7 @@ public class ToDoController {
             ListItem item = this.toDoList.createListItem(this.reader); // Creates the ListItem from user input
             this.toDoList.addToDoListItem(item); // Stores the ListItem in the database
             System.out.println("List item has been created");
-        } catch (ListItemAlreadyExistsException e) {
+        } catch (ListItemAlreadyExistsException | InvalidDateTimeFormatException e) {
             e.printStackTrace();
         }
     }
@@ -149,7 +150,13 @@ public class ToDoController {
         switch (option) {
             case 1 -> listItem.setTitle(this.reader.getNextText("\nEnter a new list item title")); // Sets the item title with the value returned from the reader
             case 2 -> listItem.setText(this.reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
-            case 3 -> this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
+            case 3 -> {
+                try {
+                    this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
+                }catch (InvalidDateTimeFormatException e){
+                    e.printStackTrace();
+                }
+            }
             case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
     }

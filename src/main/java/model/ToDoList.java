@@ -30,7 +30,7 @@ public class ToDoList {
      * @return listItem created from user input
      * @throws ListItemAlreadyExistsException An item with this name already exists
      */
-    public ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException {
+    public ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException, InvalidDateTimeFormatException {
         ListItem listItem = new ListItem();
 
         String title = reader.getNextText("\nEnter the list item title"); // Request the title of the new item to be added
@@ -58,13 +58,14 @@ public class ToDoList {
 
     /**
      * Removes a ListItem from the database
+     *
      * @param title to be removed from the database
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
         this.repository.removeListItem(title);
     }
 
-    public void updateListItem(ListItem item){
+    public void updateListItem(ListItem item) {
         this.repository.updateListItem(item);
     }
 
@@ -89,18 +90,14 @@ public class ToDoList {
     /**
      * Requests a due date from the user and applies it to the ListItem parameter
      *
-     * @param reader to read user input
+     * @param reader   to read user input
      * @param listItem to apply the due date to
      */
-    public void addDueDate(InputReader reader, ListItem listItem) {
+    public void addDueDate(InputReader reader, ListItem listItem) throws InvalidDateTimeFormatException {
         String dueDate = reader.getNextText("\nEnter the due date using format [yyyy-MM-dd HH:mm][Leave blank if none]");
         if (dueDate.length() == 0) return; // No due date was provided, return
-        try {
-            LocalDateTime dateTime = DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"); // Format the dueDate String into a LocalDateTime with the provided format
-            listItem.setDueDate(dateTime); // Set the date
-        } catch (InvalidDateTimeFormatException e) {
-            e.printStackTrace();
-        }
+        LocalDateTime dateTime = DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"); // Format the dueDate String into a LocalDateTime with the provided format
+        listItem.setDueDate(dateTime); // Set the date
     }
 
     /**
