@@ -66,4 +66,12 @@ public class DBConnector {
     public Connection getConnection() {
         return this.connection;
     }
+
+    public void close(){
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
