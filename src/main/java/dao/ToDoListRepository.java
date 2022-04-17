@@ -21,7 +21,7 @@ public class ToDoListRepository {
      *  and the todolist table in the database.
      */
 
-    private final Connection connection;
+    private Connection connection;
 
     /**
      * Constructor for the ToDoListRepository
@@ -37,6 +37,7 @@ public class ToDoListRepository {
      * @param item to add into the database
      */
     public void addListItem(ListItem item) {
+        openConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
@@ -44,6 +45,8 @@ public class ToDoListRepository {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection();
         }
     }
 
@@ -53,14 +56,18 @@ public class ToDoListRepository {
      * @param title to be removed from the database
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
+        openConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList WHERE title=?");
             statement.setString(1, title);
-            if (statement.executeUpdate() == 0) { // The amount of records returned == 0
+
+            if (statement.executeUpdate() == 0) {
                 throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection();
         }
     }
 
@@ -69,11 +76,14 @@ public class ToDoListRepository {
      */
     @SuppressWarnings("SqlWithoutWhere") // Suppress the IDE from showing a warning for the 'delete query'.
     public void removeAllItems() {       // In this situation, we are sure we want to clear it.
+        openConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList");
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            closeConnection();
         }
     }
 
@@ -84,6 +94,7 @@ public class ToDoListRepository {
      * @return ListItem or null
      */
     public ListItem getItemByTitle(String title) throws ListItemNotFoundException {
+        openConnection();
         ListItem item;
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM sql4486328.ToDoList where title=?");
@@ -107,6 +118,8 @@ public class ToDoListRepository {
             throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
         } catch (InvalidDateTimeFormatException | SQLException e) {
             e.printStackTrace();
+        }finally {
+            closeConnection();
         }
         return null;
     }
@@ -118,6 +131,7 @@ public class ToDoListRepository {
      * @return true if the item exists, false otherwise
      */
     public boolean doesListItemExist(String title) {
+        openConnection();
         try {
             PreparedStatement statement = connection.prepareStatement("Select * from sql4486328.ToDoList WHERE title=?");
             statement.setString(1, title);
@@ -125,6 +139,8 @@ public class ToDoListRepository {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        } finally {
+            closeConnection();
         }
     }
 
@@ -134,6 +150,7 @@ public class ToDoListRepository {
      * @return listItems list of all items
      */
     public List<ListItem> getAllListItems() {
+        openConnection();
         List<ListItem> listItems = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement("Select title from sql4486328.ToDoList");
@@ -144,6 +161,8 @@ public class ToDoListRepository {
             }
         } catch (SQLException | ListItemNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return listItems;
     }
@@ -153,14 +172,17 @@ public class ToDoListRepository {
      *
      * @param item to replace with
      */
-    public void updateListItem(ListItem item){
-        try{
+    public void updateListItem(ListItem item) {
+        openConnection();
+        try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
             statement.execute();
 
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection();
         }
     }
 
@@ -168,7 +190,7 @@ public class ToDoListRepository {
      * Add ListItem variables as parameters to the provided statement
      *
      * @param statement to add ListItem variables to
-     * @param item to add variables from
+     * @param item      to add variables from
      * @throws SQLException error
      */
     private void addItemToStatementParams(PreparedStatement statement, ListItem item) throws SQLException {
@@ -184,4 +206,24 @@ public class ToDoListRepository {
         statement.setString(4, dueDate);
         statement.setString(5, status.toString());
     }
+
+    /**
+     * Opens the connection to the database
+     */
+    private void openConnection(){
+        connection = new DBConnector().getConnection();
+    }
+
+    /**
+     * Closes the connection to the database
+     * The connection should be closed as soon as possible using this method
+     */
+    private void closeConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
