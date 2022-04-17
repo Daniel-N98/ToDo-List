@@ -61,18 +61,18 @@ public class ToDoList {
      * @param title to be removed from the database
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
-        repository.removeListItem(title);
+        this.repository.removeListItem(title);
     }
 
     public void updateListItem(ListItem item){
-        repository.updateListItem(item);
+        this.repository.updateListItem(item);
     }
 
     /**
      * Removes all ListItem objects from the database
      */
     public void clearAllListItems() {
-        repository.removeAllItems();
+        this.repository.removeAllItems();
     }
 
     /**
@@ -83,7 +83,7 @@ public class ToDoList {
      * @throws ListItemNotFoundException a ListItem could not be found
      */
     public ListItem getListItem(String listItemName) throws ListItemNotFoundException {
-        return repository.getItemByTitle(listItemName);
+        return this.repository.getItemByTitle(listItemName);
     }
 
     /**
@@ -107,7 +107,7 @@ public class ToDoList {
      * Prints all ListItem objects found in the database
      */
     public void printAllListItems() {
-        repository.getAllListItems().forEach(System.out::println);
+        this.repository.getAllListItems().forEach(System.out::println);
     }
 
     /**
@@ -117,6 +117,6 @@ public class ToDoList {
      * @return true if a ListItem is found with that name
      */
     private boolean listItemExists(String title) {
-        return repository.doesListItemExist(title);
+        return this.repository.doesListItemExist(title);
     }
 }

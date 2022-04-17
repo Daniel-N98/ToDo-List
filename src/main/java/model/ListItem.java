@@ -69,11 +69,11 @@ public class ListItem {
     @Override
     public String toString() {
         return "\nListItem{" +
-                "title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", timestamp=" + timestamp +
-                (dueDate != null ? ", dueDate=" + dueDate.toString().replace("T", " ") : "") +
-                ", status=" + status +
+                "title='" + this.title + '\'' +
+                ", text='" + this.text + '\'' +
+                ", timestamp=" + this.timestamp +
+                (this.dueDate != null ? ", dueDate=" + this.dueDate.toString().replace("T", " ") : "") +
+                ", status=" + this.status +
                 "}";
     }
 }

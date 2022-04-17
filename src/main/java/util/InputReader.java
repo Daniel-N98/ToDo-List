@@ -18,6 +18,6 @@ public class InputReader {
      */
     public String getNextText(String message) {
         System.out.println(message);
-        return scanner.nextLine();
+        return this.scanner.nextLine();
     }
 }
