@@ -81,8 +81,6 @@ public class ToDoController {
 
     /**
      * Attempts to update a ListItem based on the user input
-     * <p>
-     * TODO - Save the ListItem into the database once it has been edited
      */
     public void updateToDoList() {
 
