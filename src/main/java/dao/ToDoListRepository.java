@@ -38,7 +38,7 @@ public class ToDoListRepository {
      */
     public void addListItem(ListItem item) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO todolist.todolist (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
             statement.execute();
 
@@ -54,7 +54,7 @@ public class ToDoListRepository {
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist WHERE title=?");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList WHERE title=?");
             statement.setString(1, title);
             if (statement.executeUpdate() == 0) { // The amount of records returned == 0
                 throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
@@ -70,7 +70,7 @@ public class ToDoListRepository {
     @SuppressWarnings("SqlWithoutWhere") // Suppress the IDE from showing a warning for the 'delete query'.
     public void removeAllItems() {       // In this situation, we are sure we want to clear it.
         try {
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM todolist.todolist");
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM sql4486328.ToDoList");
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class ToDoListRepository {
     public ListItem getItemByTitle(String title) throws ListItemNotFoundException {
         ListItem item;
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM todolist.todolist where title=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM sql4486328.ToDoList where title=?");
             statement.setString(1, title);
             ResultSet set = statement.executeQuery();
             if (set.next()) { // Move the ResultSet forward one
@@ -119,7 +119,7 @@ public class ToDoListRepository {
      */
     public boolean doesListItemExist(String title) {
         try {
-            PreparedStatement statement = connection.prepareStatement("Select * from todolist.todolist WHERE title=?");
+            PreparedStatement statement = connection.prepareStatement("Select * from sql4486328.ToDoList WHERE title=?");
             statement.setString(1, title);
             return statement.executeQuery().next();
         } catch (SQLException e) {
@@ -136,7 +136,7 @@ public class ToDoListRepository {
     public List<ListItem> getAllListItems() {
         List<ListItem> listItems = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement("Select title from todolist.todolist");
+            PreparedStatement statement = connection.prepareStatement("Select title from sql4486328.ToDoList");
             ResultSet set = statement.executeQuery();
             while (set.next()) {
                 ListItem item = getItemByTitle(set.getString("title"));
@@ -155,7 +155,7 @@ public class ToDoListRepository {
      */
     public void updateListItem(ListItem item){
         try{
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO todolist.todolist (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
             statement.execute();
 
