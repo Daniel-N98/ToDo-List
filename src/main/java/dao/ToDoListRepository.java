@@ -42,7 +42,6 @@ public class ToDoListRepository {
             PreparedStatement statement = this.connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             addItemToStatementParams(statement, item);
             statement.execute();
-
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -97,9 +96,7 @@ public class ToDoListRepository {
         openConnection();
         ListItem item;
         try {
-            PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM sql4486328.ToDoList where title=?");
-            statement.setString(1, title);
-            ResultSet set = statement.executeQuery();
+            ResultSet set = executeStatement("SELECT * FROM sql4486328.ToDoList where title=?", title);
             if (set.next()) { // Move the ResultSet forward one
 
                 item = new ListItem();
@@ -133,9 +130,7 @@ public class ToDoListRepository {
     public boolean doesListItemExist(String title) {
         openConnection();
         try {
-            PreparedStatement statement = this.connection.prepareStatement("Select * from sql4486328.ToDoList WHERE title=?");
-            statement.setString(1, title);
-            return statement.executeQuery().next();
+            return executeStatement("Select * from sql4486328.ToDoList WHERE title=?", title).next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -153,8 +148,7 @@ public class ToDoListRepository {
         openConnection();
         List<ListItem> listItems = new ArrayList<>();
         try {
-            PreparedStatement statement = this.connection.prepareStatement("Select title from sql4486328.ToDoList");
-            ResultSet set = statement.executeQuery();
+            ResultSet set = executeStatement("Select title from sql4486328.ToDoList", "");
             while (set.next()) {
                 ListItem item = getItemByTitle(set.getString("title"));
                 listItems.add(item);
@@ -187,6 +181,31 @@ public class ToDoListRepository {
     }
 
     /**
+     * Prepares the passed statement and adds the params if there is any as statement parameters.
+     * Returns the ResultSet
+     * - Should not be used on statements that don't return a ResultSet
+     *
+     * @param statement to execute
+     * @param params String[] parameters
+     * @return ResultSet returned from the database
+     * @throws SQLException if a syntax error occurs, or an attempt to use the method on a statement which does
+     *                      not return a ResultSet
+     */
+    private ResultSet executeStatement(String statement, String... params) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(statement);
+        if (params[0].length() > 0) {
+            for (int i = 0; i < params.length; i++){
+                try {
+                    preparedStatement.setString((i + 1), params[i]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return preparedStatement.executeQuery();
+    }
+
+    /**
      * Add ListItem variables as parameters to the provided statement
      *
      * @param statement to add ListItem variables to
@@ -210,7 +229,7 @@ public class ToDoListRepository {
     /**
      * Opens the connection to the database
      */
-    private void openConnection(){
+    private void openConnection() {
         this.connection = new DBConnector().getConnection();
     }
 
