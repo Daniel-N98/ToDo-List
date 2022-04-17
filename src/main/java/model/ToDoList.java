@@ -1,12 +1,11 @@
-package main.model;
+package model;
 
-import main.dao.ToDoListRepository;
-import main.exceptions.InvalidDateTimeFormatException;
-import main.exceptions.ListItemAlreadyExistsException;
-import main.exceptions.ListItemNotFoundException;
-
-import main.util.DateParser;
-import main.util.InputReader;
+import dao.ToDoListRepository;
+import exceptions.InvalidDateTimeFormatException;
+import exceptions.ListItemAlreadyExistsException;
+import exceptions.ListItemNotFoundException;
+import util.DateParser;
+import util.InputReader;
 
 import java.time.LocalDateTime;
 

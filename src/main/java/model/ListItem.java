@@ -1,11 +1,11 @@
-package main.model;
+package model;
 
 import lombok.Getter;
 import lombok.Setter;
-import main.exceptions.InvalidDateTimeFormatException;
-import main.types.ItemStatus;
-import main.exceptions.InvalidItemStatusException;
-import main.util.DateParser;
+import exceptions.InvalidDateTimeFormatException;
+import types.ItemStatus;
+import exceptions.InvalidItemStatusException;
+import util.DateParser;
 
 import java.time.LocalDateTime;
 

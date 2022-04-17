@@ -1,12 +1,12 @@
-package main.controller;
+package controller;
 
-import main.exceptions.ListItemNotFoundException;
-import main.model.ToDoList;
-import main.types.ItemStatus;
-import main.util.InputReader;
-import main.exceptions.InvalidItemStatusException;
-import main.exceptions.ListItemAlreadyExistsException;
-import main.model.ListItem;
+import exceptions.ListItemNotFoundException;
+import model.ToDoList;
+import types.ItemStatus;
+import util.InputReader;
+import exceptions.InvalidItemStatusException;
+import exceptions.ListItemAlreadyExistsException;
+import model.ListItem;
 
 public class ToDoController {
 

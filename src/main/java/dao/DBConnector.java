@@ -1,4 +1,4 @@
-package main.dao;
+package dao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,7 +42,7 @@ public class DBConnector {
      */
     private String[] getDbDetails() {
         try {
-            String connFilePath = "src/resources/connParams.txt";
+            String connFilePath = "src/main/java/resources/connParams.txt";
             Scanner scanner = new Scanner(new File(connFilePath));
             String[] details = new String[3];
             scanner.useDelimiter(", ");
