@@ -3,11 +3,13 @@ package model;
 import lombok.Getter;
 import lombok.Setter;
 import exceptions.InvalidDateTimeFormatException;
+import org.apache.commons.text.WordUtils;
 import types.ItemStatus;
 import exceptions.InvalidItemStatusException;
 import util.DateParser;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
@@ -40,7 +42,7 @@ public class ListItem {
         this.title = title;
         this.text = text;
         try {
-            this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().toString(), "yyyy-MM-dd HH:mm");
+            this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().toString(), "yyyy-MM-dd HH:mm").truncatedTo(ChronoUnit.SECONDS);
         } catch (InvalidDateTimeFormatException e) {
             e.printStackTrace();
         }
@@ -68,12 +70,11 @@ public class ListItem {
      */
     @Override
     public String toString() {
-        return "\nListItem{" +
-                "title='" + this.title + '\'' +
-                ", text='" + this.text + '\'' +
-                ", timestamp=" + this.timestamp +
-                (this.dueDate != null ? ", dueDate=" + this.dueDate.toString().replace("T", " ") : "") +
-                ", status=" + this.status +
-                "}";
+        return "=".repeat(30) +
+                "\nTitle: [" + this.title +
+                "]\n\nDescription: [" + WordUtils.wrap(this.text, 90) +
+                "]\n\nCreated: [" + this.timestamp.toString() +
+                (this.dueDate != null ? "]\nDue date: [" + this.dueDate.toString().replace("T", " ") : "") +
+                "]\nStatus: [" + this.status + "]\n";
     }
 }
