@@ -6,7 +6,6 @@ import exceptions.InvalidDateTimeFormatException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
 
 public class DateParser {
 
@@ -21,7 +20,7 @@ public class DateParser {
     public static LocalDateTime parseStringToLocalDateTime(String date, String format) throws InvalidDateTimeFormatException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         try {
-            return LocalDateTime.parse(date, formatter).truncatedTo(ChronoUnit.SECONDS);
+            return LocalDateTime.parse(date, formatter);
         } catch (DateTimeParseException e) {
             throw new InvalidDateTimeFormatException("'" + date + "' is an invalid format. " + format);
         }
