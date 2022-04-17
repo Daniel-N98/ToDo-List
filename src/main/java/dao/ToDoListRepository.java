@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,19 +98,16 @@ public class ToDoListRepository {
         ListItem item;
         try {
             ResultSet set = executeStatement("SELECT * FROM sql4486328.ToDoList where title=?", title);
-            if (set.next()) { // Move the ResultSet forward one
+            if (set.next()) {
+                String dueDateStr = set.getString("dueDate").replace("T", " ");
 
-                item = new ListItem();
-
-                item.setTitle(set.getString("title"));
-                item.setText(set.getString("description"));
-                String timeStamp = set.getString("timestamp").replace("T", " ");
-                String dueDate = set.getString("dueDate").replace("T", " ");
-
-                item.setTimestamp(DateParser.parseStringToLocalDateTime(timeStamp, "yyyy-MM-dd HH:mm:ss"));
-                if (!dueDate.equals("None")) {
-                    item.setDueDate(DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"));
-                }
+                LocalDateTime timeStamp = DateParser.parseStringToLocalDateTime(set.getString("timestamp").replace("T", " "), "yyyy-MM-dd HH:mm:ss");
+                LocalDateTime dueDate = !dueDateStr.equals("None") ? DateParser.parseStringToLocalDateTime(dueDateStr, "yyyy-MM-dd HH:mm") : null;
+                item = new ListItem(set.getString("title"),
+                        set.getString("description"),
+                        timeStamp,
+                        dueDate,
+                        ItemStatus.valueOf(set.getString("status")));
                 return item;
             }
             throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
@@ -186,7 +184,7 @@ public class ToDoListRepository {
      * - Should not be used on statements that don't return a ResultSet
      *
      * @param statement to execute
-     * @param params String[] parameters
+     * @param params    String[] parameters
      * @return ResultSet returned from the database
      * @throws SQLException if a syntax error occurs, or an attempt to use the method on a statement which does
      *                      not return a ResultSet
@@ -194,7 +192,7 @@ public class ToDoListRepository {
     private ResultSet executeStatement(String statement, String... params) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(statement);
         if (params[0].length() > 0) {
-            for (int i = 0; i < params.length; i++){
+            for (int i = 0; i < params.length; i++) {
                 try {
                     preparedStatement.setString((i + 1), params[i]);
                 } catch (SQLException e) {
