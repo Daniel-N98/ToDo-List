@@ -43,21 +43,21 @@ public class ToDoController {
     /**
      * Attempts to add a new ListItem into the database
      */
-    public void addToDoItem() {
+    private void addToDoItem() {
         this.toDoList.addToDoListItem(reader); // Stores the ListItem in the database
     }
 
     /**
      * Attempts to remove a ListItem from the database
      */
-    public void removeToDoItem() {
+    private void removeToDoItem() {
         this.toDoList.removeListItem(reader);
     }
 
     /**
      * Attempts to update a ListItem based on the user input
      */
-    public void updateToDoList() {
+    private void updateToDoList() {
 
         ListItem listItemSelected;
         int option;
@@ -93,7 +93,7 @@ public class ToDoController {
      *
      * @param item to update
      */
-    public void updateItemStatus(ListItem item) {
+    private void updateItemStatus(ListItem item) {
         int option;
         toDoList.printItem(item);
         option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
