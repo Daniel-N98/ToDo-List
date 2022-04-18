@@ -50,23 +50,54 @@ public class ToDoList {
     /**
      * Adds a ListItem into the database
      *
-     * @param item to be added to the database
+     * @param reader to read user input
      */
-    public void addToDoListItem(ListItem item) {
-        this.repository.addListItem(item);
+    public void addToDoListItem(InputReader reader) {
+
+        try {
+            ListItem item = createListItem(reader); // Creates the ListItem from user input
+            this.repository.addListItem(item); // Stores the ListItem in the database
+            System.out.println(item.getTitle() + " has been added to your to-do list.");
+        } catch (ListItemAlreadyExistsException | InvalidDateTimeFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Removes a ListItem from the database
      *
-     * @param title to be removed from the database
+     * @param reader to read user input
      */
-    public void removeListItem(String title) throws ListItemNotFoundException {
-        this.repository.removeListItem(title);
+    public void removeListItem(InputReader reader) {
+        try {
+            String itemRemovingTitle = reader.getNextText("\nEnter the list item title");
+            this.repository.removeListItem(itemRemovingTitle);
+            System.out.println("\n" + itemRemovingTitle + " has been removed from your to-do list");
+        } catch (ListItemNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Removes a ListItem from the database
+     *
+     * @param item to remove
+     */
+    public void removeListItem(ListItem item) {
+        try {
+            this.repository.removeListItem(item.getTitle());
+        } catch (ListItemNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Updates (adds) a ListItem into the database
+     *
+     * @param item to add into the database
+     */
     public void updateListItem(ListItem item) {
-        this.repository.updateListItem(item);
+        this.repository.addListItem(item);
     }
 
     /**
@@ -74,6 +105,7 @@ public class ToDoList {
      */
     public void clearAllListItems() {
         this.repository.removeAllItems();
+        System.out.println("The to-do list has been cleared.");
     }
 
     /**
@@ -81,7 +113,6 @@ public class ToDoList {
      *
      * @param listItemName to find in the database
      * @return ListItem found
-     * @throws ListItemNotFoundException a ListItem could not be found
      */
     public ListItem getListItem(String listItemName) throws ListItemNotFoundException {
         return this.repository.getItemByTitle(listItemName);
@@ -95,9 +126,23 @@ public class ToDoList {
      */
     public void addDueDate(InputReader reader, ListItem listItem) throws InvalidDateTimeFormatException {
         String dueDate = reader.getNextText("\nEnter the due date using format [yyyy-MM-dd HH:mm][Leave blank if none]");
-        if (dueDate.length() == 0) return; // No due date was provided, return
-        LocalDateTime dateTime = DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"); // Format the dueDate String into a LocalDateTime with the provided format
-        listItem.setDueDate(dateTime); // Set the date
+        if (dueDate.length() != 0) { // No due date was provided, return
+            LocalDateTime dateTime = DateParser.parseStringToLocalDateTime(dueDate, "yyyy-MM-dd HH:mm"); // Format the dueDate String into a LocalDateTime with the provided format
+            listItem.setDueDate(dateTime); // Set the date
+        }
+    }
+
+    /**
+     * Prints the ListItem to the console
+     *
+     * @param item to print out
+     */
+    public void printItem(ListItem item) {
+        try {
+            System.out.println(item.toString());
+        } catch (NullPointerException e) {
+            System.out.println("Item '" + "' cannot be found");
+        }
     }
 
     /**

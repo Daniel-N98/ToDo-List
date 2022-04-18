@@ -160,25 +160,6 @@ public class ToDoListRepository {
     }
 
     /**
-     * Updates a ListItem in the database
-     *
-     * @param item to replace with
-     */
-    public void updateListItem(ListItem item) {
-        openConnection();
-        try {
-            PreparedStatement statement = this.connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
-            addItemToStatementParams(statement, item);
-            statement.execute();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            closeConnection();
-        }
-    }
-
-    /**
      * Prepares the passed statement and adds the params if there is any as statement parameters.
      * Returns the ResultSet
      * - Should not be used on statements that don't return a ResultSet

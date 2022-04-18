@@ -59,7 +59,8 @@ public class MenuController {
      * @param reader to read user input from
      * @return int integer entered by user, or -1
      */
-    public int requestUserOption(InputReader reader) {
+    public int requestUserOption(String menu, InputReader reader) {
+        System.out.println(menu);
         try {
             return Integer.parseInt(reader.getNextText("\nEnter an option:")); // Option was parsed to an Integer, and can be returned
 
