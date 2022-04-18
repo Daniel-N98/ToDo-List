@@ -7,9 +7,16 @@ public enum ItemStatus {
     PROGRESS,
     COMPLETED;
 
-    public static ItemStatus getStatus(int i) throws InvalidItemStatusException {
+    /**
+     * Returns the value at index
+     *
+     * @param index status index
+     * @return ItemStatus at index
+     * @throws InvalidItemStatusException if index is out of bounds
+     */
+    public static ItemStatus getStatus(int index) throws InvalidItemStatusException {
         try {
-            return values()[i];
+            return values()[index];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidItemStatusException("Invalid item status");
         }

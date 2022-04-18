@@ -54,6 +54,7 @@ public class ToDoListRepository {
      * Removes a ListItem from the database
      *
      * @param title to be removed from the database
+     * @throws ListItemNotFoundException if the list item is not found
      */
     public void removeListItem(String title) throws ListItemNotFoundException {
         openConnection();
@@ -92,6 +93,7 @@ public class ToDoListRepository {
      *
      * @param title of the ListItem
      * @return ListItem or null
+     * @throws ListItemNotFoundException if the list item is not found
      */
     public ListItem getItemByTitle(String title) throws ListItemNotFoundException {
         openConnection();

@@ -19,17 +19,17 @@ public class ListItem {
 
     private String title;
     private String text; //
-    private LocalDateTime timestamp; // Date/Time that the ListItem was created
-    private LocalDateTime dueDate; // Due date for the ListItem
-    private ItemStatus status; // The status of the ListItem
+    private LocalDateTime timestamp; // Date & Time that the ListItem was created
+    private LocalDateTime dueDate;
+    private ItemStatus status;
 
     /**
      * Default constructor for the ListItem
      * Instantiates the timestamp variable with the current date & time
      */
     public ListItem() {
-        this.timestamp = LocalDateTime.now(); // Instantiate the timestamp variable with the current date/time
-        this.status = ItemStatus.PENDING;
+        this.timestamp = LocalDateTime.now(); // Instantiate the timestamp variable with the current date & time
+        this.status = ItemStatus.PENDING; // Item status is instantiated to PENDING as default
     }
 
     /**
@@ -68,7 +68,7 @@ public class ListItem {
     /**
      * Returns a readable version of this object
      *
-     * @return String
+     * @return String readable ListItem
      */
     @Override
     public String toString() {

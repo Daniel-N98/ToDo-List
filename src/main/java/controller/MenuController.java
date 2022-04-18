@@ -63,7 +63,6 @@ public class MenuController {
         System.out.println(menu);
         try {
             return Integer.parseInt(reader.getNextText("\nEnter an option:")); // Option was parsed to an Integer, and can be returned
-
         } catch (NumberFormatException e) {
             System.out.println("\nInvalid option");
             return -1; // Option was not of the correct data type
