@@ -51,6 +51,8 @@ public class DBConnector {
             details[0] = scanner.next();
             details[1] = scanner.next();
             details[2] = scanner.next();
+
+            scanner.close();
             return details;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

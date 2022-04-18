@@ -18,11 +18,11 @@ public class MenuController {
      */
     public String getMainMenu() {
         return """
-                \n1. View your TO-DO list
-                2. Add to your TO-DO list
-                3. Remove from your TO-DO list
-                4. Clear TO-DO list
-                5. Update TO-DO list""";
+                \n1. View your to-do list
+                2. Add to your to-do list
+                3. Remove from your to-do list
+                4. Clear to-do list
+                5. Update to-do list""";
     }
 
     /**
@@ -36,7 +36,7 @@ public class MenuController {
                 2. Edit description
                 3. Edit due date
                 4. Edit status
-                5. Cancel""";
+                5. Return to main menu""";
     }
 
     /**

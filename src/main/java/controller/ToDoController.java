@@ -48,7 +48,7 @@ public class ToDoController {
         try {
             ListItem item = this.toDoList.createListItem(this.reader); // Creates the ListItem from user input
             this.toDoList.addToDoListItem(item); // Stores the ListItem in the database
-            System.out.println("List item has been created");
+            System.out.println(item.getTitle() + " has been added to your to-do list.");
         } catch (ListItemAlreadyExistsException | InvalidDateTimeFormatException e) {
             e.printStackTrace();
         }
@@ -59,8 +59,9 @@ public class ToDoController {
      */
     public void removeToDoItem() {
         try {
-            this.toDoList.removeListItem(this.reader.getNextText("\nEnter the list item title"));
-            System.out.println("\nThe list item has been removed.");
+            String itemRemovingTitle = this.reader.getNextText("\nEnter the list item title");
+            this.toDoList.removeListItem(itemRemovingTitle);
+            System.out.println("\n" + itemRemovingTitle + " has been removed from your to-do list");
         }catch (ListItemNotFoundException e){
             e.printStackTrace();
         }
@@ -78,6 +79,7 @@ public class ToDoController {
      */
     public void clearToDoList() {
         this.toDoList.clearAllListItems(); // Remove all items from the ToDoList
+        System.out.println("Your to-do list has been cleared.");
     }
 
     /**
@@ -98,6 +100,7 @@ public class ToDoController {
                 selectFromEditorMenu(listItemSelected, option); // Calls a method based on the option
 
                 this.toDoList.updateListItem(listItemSelected); // Replace the item
+                System.out.println(listItemSelected.getTitle() + " has been updated and saved.");
             } while (option != 5);
 
         } catch (ListItemNotFoundException e) {
