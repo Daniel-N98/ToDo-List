@@ -11,7 +11,7 @@ public class InputReader {
     }
 
     /**
-     * Prints out a message to console, and returns the next line
+     * Prints out a message to console, and returns the next line input
      *
      * @param message to be printed
      * @return String nextLine

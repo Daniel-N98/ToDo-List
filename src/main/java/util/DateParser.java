@@ -15,7 +15,7 @@ public class DateParser {
      * @param date   to be parsed
      * @param format date format
      * @return LocalDateTime parsed LocalDateTime object
-     * @throws InvalidDateTimeFormatException Invalid format
+     * @throws InvalidDateTimeFormatException if the String date parameter cannot be parsed
      */
     public static LocalDateTime parseStringToLocalDateTime(String date, String format) throws InvalidDateTimeFormatException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);

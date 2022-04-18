@@ -29,6 +29,7 @@ public class ToDoList {
      * @param reader to read user input
      * @return listItem created from user input
      * @throws ListItemAlreadyExistsException An item with this name already exists
+     * @throws InvalidDateTimeFormatException if the date is invalid
      */
     public ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException, InvalidDateTimeFormatException {
         ListItem listItem = new ListItem();
@@ -113,6 +114,7 @@ public class ToDoList {
      *
      * @param listItemName to find in the database
      * @return ListItem found
+     * @throws ListItemNotFoundException if the list item is not found
      */
     public ListItem getListItem(String listItemName) throws ListItemNotFoundException {
         return this.repository.getItemByTitle(listItemName);
@@ -120,9 +122,11 @@ public class ToDoList {
 
     /**
      * Requests a due date from the user and applies it to the ListItem parameter
+     * String date is parsed with the DateParser class
      *
      * @param reader   to read user input
      * @param listItem to apply the due date to
+     * @throws InvalidDateTimeFormatException if the date format provided is invalid
      */
     public void addDueDate(InputReader reader, ListItem listItem) throws InvalidDateTimeFormatException {
         String dueDate = reader.getNextText("\nEnter the due date using format [yyyy-MM-dd HH:mm][Leave blank if none]");
@@ -133,7 +137,7 @@ public class ToDoList {
     }
 
     /**
-     * Prints the ListItem to the console
+     * Prints out the ListItem to the console
      *
      * @param item to print out
      */
@@ -156,7 +160,7 @@ public class ToDoList {
      * Returns whether a ListItem is present in the database
      *
      * @param title to find in the database
-     * @return true if a ListItem is found with that name
+     * @return true if a ListItem is found with that title
      */
     private boolean listItemExists(String title) {
         return this.repository.doesListItemExist(title);
