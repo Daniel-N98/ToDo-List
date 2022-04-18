@@ -25,7 +25,7 @@ public class DBConnector {
      */
     private void connect(){
         try {
-            String[] details = getDbDetails();
+            String[] details = getDBDetails();
             if (details == null) {
                 return;
             }
@@ -42,7 +42,7 @@ public class DBConnector {
      *
      * @return details from connParams.txt
      */
-    private String[] getDbDetails() {
+    private String[] getDBDetails() {
         try {
             String connFilePath = "src/main/java/resources/connParams.txt";
             Scanner scanner = new Scanner(new File(connFilePath));
