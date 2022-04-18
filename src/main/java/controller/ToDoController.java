@@ -6,7 +6,6 @@ import model.ToDoList;
 import types.ItemStatus;
 import util.InputReader;
 import exceptions.InvalidItemStatusException;
-import exceptions.ListItemAlreadyExistsException;
 import model.ListItem;
 
 public class ToDoController {
@@ -45,41 +44,14 @@ public class ToDoController {
      * Attempts to add a new ListItem into the database
      */
     public void addToDoItem() {
-        try {
-            ListItem item = this.toDoList.createListItem(this.reader); // Creates the ListItem from user input
-            this.toDoList.addToDoListItem(item); // Stores the ListItem in the database
-            System.out.println(item.getTitle() + " has been added to your to-do list.");
-        } catch (ListItemAlreadyExistsException | InvalidDateTimeFormatException e) {
-            e.printStackTrace();
-        }
+        this.toDoList.addToDoListItem(reader); // Stores the ListItem in the database
     }
 
     /**
      * Attempts to remove a ListItem from the database
      */
     public void removeToDoItem() {
-        try {
-            String itemRemovingTitle = this.reader.getNextText("\nEnter the list item title");
-            this.toDoList.removeListItem(itemRemovingTitle);
-            System.out.println("\n" + itemRemovingTitle + " has been removed from your to-do list");
-        }catch (ListItemNotFoundException e){
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Prints all ListItem objects from the database
-     */
-    public void printToDoList() {
-        this.toDoList.printAllListItems(); // Print all the list items to the console
-    }
-
-    /**
-     * Clears all ListItem objects from the database
-     */
-    public void clearToDoList() {
-        this.toDoList.clearAllListItems(); // Remove all items from the ToDoList
-        System.out.println("Your to-do list has been cleared.");
+        this.toDoList.removeListItem(reader);
     }
 
     /**
@@ -88,24 +60,32 @@ public class ToDoController {
     public void updateToDoList() {
 
         ListItem listItemSelected;
+        int option;
+
         try {
             listItemSelected = this.toDoList.getListItem(this.reader.getNextText("\nEnter the list item title")); // Attempt to retrieve a list item with the passed title
-            int option;
-
             do {
-                this.toDoList.removeListItem(listItemSelected.getTitle()); // Remove the item whilst it is being edited
-                printItemBeingEdited(listItemSelected); // Print out the item that is being edited
                 option = printMenuReturnInput(this.menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
+                updateItem(listItemSelected, option);
 
-                selectFromEditorMenu(listItemSelected, option); // Calls a method based on the option
-
-                this.toDoList.updateListItem(listItemSelected); // Replace the item
                 System.out.println(listItemSelected.getTitle() + " has been updated and saved.");
             } while (option != 5);
-
         } catch (ListItemNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Perform updates on the item with the selected option
+     *
+     * @param item to be edited
+     * @param option selected
+     */
+    private void updateItem(ListItem item, int option) {
+        toDoList.printItem(item);
+        this.toDoList.removeListItem(item);
+        selectFromEditorMenu(item, option);
+        this.toDoList.updateListItem(item);
     }
 
     /**
@@ -115,7 +95,7 @@ public class ToDoController {
      */
     public void updateItemStatus(ListItem item) {
         int option;
-        printItemBeingEdited(item);
+        toDoList.printItem(item);
         option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
 
         if (option < 4 && option > 0) {
@@ -135,10 +115,10 @@ public class ToDoController {
      */
     private void selectMenu(int option) {
         switch (option) {
-            case 1 -> printToDoList();
+            case 1 -> toDoList.printAllListItems();
             case 2 -> addToDoItem();
             case 3 -> removeToDoItem();
-            case 4 -> clearToDoList();
+            case 4 -> toDoList.clearAllListItems();
             case 5 -> updateToDoList();
         }
     }
@@ -156,21 +136,12 @@ public class ToDoController {
             case 3 -> {
                 try {
                     this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
-                }catch (InvalidDateTimeFormatException e){
+                } catch (InvalidDateTimeFormatException e) {
                     e.printStackTrace();
                 }
             }
             case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
-    }
-
-    /**
-     * Prints out the ListItem parameter to show what ListItem is being edited
-     *
-     * @param item to print out
-     */
-    private void printItemBeingEdited(ListItem item) {
-        System.out.println("\nYou are editing: \n" + item.toString());
     }
 
     /**
@@ -180,7 +151,6 @@ public class ToDoController {
      * @return int provided by the user
      */
     private int printMenuReturnInput(String menu) {
-        System.out.println(menu);
-        return this.menuController.requestUserOption(this.reader);
+        return this.menuController.requestUserOption(menu, this.reader);
     }
 }
