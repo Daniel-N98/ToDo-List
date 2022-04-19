@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ListItemTest {
+
     /**
      * Test the constructor for the ListItem class
      * Object instance variables will be instantiated with the parameters
@@ -34,13 +35,17 @@ class ListItemTest {
      */
     @Test
     void testAllArgsConstructor() throws InvalidDateTimeFormatException {
+        // Declare the current time now to pass as the TimeStamp and assert it further in the method.
         LocalDateTime now = LocalDateTime.now();
+
+        // Use the constructor requiring all arguments to create the ListItem
         ListItem allArgsItem = new ListItem("Title",
                 "Description",
                 now,
                 DateParser.parseStringToLocalDateTime("2021-01-01 22:20", "yyyy-MM-dd HH:mm"),
                 ItemStatus.PROGRESS);
 
+        // Assert all the properties are as expected
         assertNotNull(allArgsItem);
         assertEquals("Title", allArgsItem.getTitle());
         assertEquals("Description", allArgsItem.getText());
@@ -56,15 +61,21 @@ class ListItemTest {
      */
     @Test
     void setStatusTest() throws InvalidItemStatusException {
+        // Default ListItem constructor - ItemStatus is instantiated with PENDING as default.
         ListItem setStatusItem = new ListItem();
         assertEquals(ItemStatus.PENDING, setStatusItem.getStatus());
 
+        // Update the ItemStatus to the PROGRESS status
         setStatusItem.setStatus(ItemStatus.PROGRESS);
+        // Assert the change has been made
         assertEquals(ItemStatus.PROGRESS, setStatusItem.getStatus());
 
+        // Update the ItemStatus to the COMPLETED status
         setStatusItem.setStatus(ItemStatus.COMPLETED);
+        // Assert the change has been made
         assertEquals(ItemStatus.COMPLETED, setStatusItem.getStatus());
 
+        // Assert that the 'InvalidItemStatusException' is thrown when the ItemStatus value is set to 'Null'
         Throwable exception = assertThrows(InvalidItemStatusException.class, () -> setStatusItem.setStatus(null));
         assertEquals("ItemStatus cannot be null", exception.getMessage());
     }

@@ -162,7 +162,7 @@ public class ToDoList {
      * @param title to find in the database
      * @return true if a ListItem is found with that title
      */
-    private boolean listItemExists(String title) {
+    public boolean listItemExists(String title) {
         return this.repository.doesListItemExist(title);
     }
 }
