@@ -31,7 +31,7 @@ public class ToDoList {
      * @throws ListItemAlreadyExistsException An item with this name already exists
      * @throws InvalidDateTimeFormatException if the date is invalid
      */
-    public ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException, InvalidDateTimeFormatException {
+    private ListItem createListItem(InputReader reader) throws ListItemAlreadyExistsException, InvalidDateTimeFormatException {
         ListItem listItem = new ListItem();
 
         String title = reader.getNextText("\nEnter the list item title"); // Request the title of the new item to be added
@@ -162,7 +162,7 @@ public class ToDoList {
      * @param title to find in the database
      * @return true if a ListItem is found with that title
      */
-    private boolean listItemExists(String title) {
+    public boolean listItemExists(String title) {
         return this.repository.doesListItemExist(title);
     }
 }
