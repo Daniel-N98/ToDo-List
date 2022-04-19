@@ -44,7 +44,7 @@ public class ListItem {
         this.title = title;
         this.text = text;
         try {
-            this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().toString(), "yyyy-MM-dd HH:mm").truncatedTo(ChronoUnit.SECONDS);
+            this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString(), "yyyy-MM-dd HH:mm");
         } catch (InvalidDateTimeFormatException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class ListItem {
      */
     public void setStatus(ItemStatus status) throws InvalidItemStatusException {
         if (status == null) {
-            throw new InvalidItemStatusException("Invalid status provided");
+            throw new InvalidItemStatusException("ItemStatus cannot be null");
         }
         System.out.println("\nItem status has been updated: [" + this.status + "]" + " -> " + "[" + status + "]");
         this.status = status;
