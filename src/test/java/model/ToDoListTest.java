@@ -1,6 +1,7 @@
 package model;
 
 import exceptions.InvalidDateTimeFormatException;
+import exceptions.InvalidItemTitleException;
 import exceptions.ListItemNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,7 +79,7 @@ class ToDoListTest {
      * @throws ListItemNotFoundException if the ListItem cannot be found in the database
      */
     @Test
-    void getListItemTest() throws ListItemNotFoundException {
+    void getListItemTest() throws ListItemNotFoundException, InvalidItemTitleException {
         TestUtil.simulateUserInput("getListItemTest", "Desc", "2021-01-01 23:59", "getListItemTest");
         list.addToDoListItem(new InputReader());
         ListItem item = list.getListItem("getListItemTest");
@@ -91,10 +92,9 @@ class ToDoListTest {
      * Test adding a Due Date to the ListItem works correctly
      * Parsed time will replace the space between Date & Time with a T
      *
-     * @throws InvalidDateTimeFormatException if String could not be parsed to a date
      */
     @Test
-    void addDueDateTest() throws InvalidDateTimeFormatException {
+    void addDueDateTest(){
         // Creates and stores an example ListItem in the database with the name "Example list item"
         ListItem item = TestUtil.createExampleItem();
 

@@ -17,10 +17,19 @@ import java.time.temporal.ChronoUnit;
 @AllArgsConstructor
 public class ListItem {
 
+    // Title of the ListItem
     private String title;
-    private String text; //
-    private LocalDateTime timestamp; // Date & Time that the ListItem was created
+
+    // Description of the ListItem
+    private String description;
+
+    // Date & Time that the ListItem was created
+    private LocalDateTime timestamp;
+
+    // Date the ListItem is due on, may not be set.
     private LocalDateTime dueDate;
+
+    // The Status of the ListItem <PENDING, PROGRESS, COMPLETED>
     private ItemStatus status;
 
     /**
@@ -34,15 +43,15 @@ public class ListItem {
 
     /**
      * Constructor for the ListItem
-     * Instantiates title, text, status and timestamp properties
+     * Instantiates title, description, status and timestamp properties
      *
      * @param title  of the list item
-     * @param text   of the list item
+     * @param description   of the list item
      * @param status of the list item (Default: PENDING)
      */
-    public ListItem(String title, String text, ItemStatus status) {
+    public ListItem(String title, String description, ItemStatus status) {
         this.title = title;
-        this.text = text;
+        this.description = description;
         try {
             this.timestamp = DateParser.parseStringToLocalDateTime(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).toString(), "yyyy-MM-dd HH:mm");
         } catch (InvalidDateTimeFormatException e) {
@@ -74,7 +83,7 @@ public class ListItem {
     public String toString() {
         return "=".repeat(30) +
                 "\nTitle: [" + this.title +
-                "]\n\nDescription: [" + WordUtils.wrap(this.text, 90) +
+                "]\n\nDescription: [" + WordUtils.wrap(this.description, 90) +
                 "]\n\nCreated: [" + this.timestamp.toString() +
                 (this.dueDate != null ? "]\nDue date: [" + this.dueDate.toString().replace("T", " ") : "") +
                 "]\nStatus: [" + this.status + "]\n";

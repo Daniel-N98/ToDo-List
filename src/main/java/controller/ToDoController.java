@@ -1,6 +1,7 @@
 package controller;
 
-import exceptions.InvalidDateTimeFormatException;
+import exceptions.InvalidItemTitleException;
+import exceptions.InvalidOptionException;
 import exceptions.ListItemNotFoundException;
 import model.ToDoList;
 import types.ItemStatus;
@@ -12,16 +13,20 @@ public class ToDoController {
 
     private final InputReader reader;
     private final ToDoList toDoList;
-    private final MenuController menuController = new MenuController(); // Instantiate the MenuController
+
+    // Instantiate the MenuController
+    private final MenuController menuController = new MenuController();
 
     /**
      * Constructor for the ToDoController class
      * Instantiates global variables and begins the application
      */
     public ToDoController() {
-        this.reader = new InputReader(); // Instantiate the InputReader
+        // Instantiate the instance variables
+        this.reader = new InputReader();
         this.toDoList = new ToDoList();
 
+        // Begin the application
         start();
     }
 
@@ -33,10 +38,13 @@ public class ToDoController {
     private void start() {
         int option;
 
+        // Print out the initial starting message of the application
         System.out.println(MenuController.TITLE);
         do {
-            option = printMenuReturnInput(this.menuController.getMainMenu()); // Prints out the provided menu, and returns the input from the user
-            selectMenu(option); // Select the menu based on user input
+            // Prints out the provided menu, and returns the input from the user
+            option = printMenuReturnInput(this.menuController.getMainMenu());
+            // Select the menu based on user input
+            selectMenu(option);
         } while (option != 6);
     }
 
@@ -44,13 +52,15 @@ public class ToDoController {
      * Attempts to add a new ListItem into the database
      */
     private void addToDoItem() {
-        this.toDoList.addToDoListItem(reader); // Stores the ListItem in the database
+        // Stores a ListItem in the database
+        this.toDoList.addToDoListItem(reader);
     }
 
     /**
      * Attempts to remove a ListItem from the database
      */
     private void removeToDoItem() {
+        // Removes a ListItem from the database
         this.toDoList.removeListItem(reader);
     }
 
@@ -65,12 +75,14 @@ public class ToDoController {
         try {
             listItemSelected = this.toDoList.getListItem(this.reader.getNextText("\nEnter the list item title")); // Attempt to retrieve a list item with the passed title
             do {
-                option = printMenuReturnInput(this.menuController.getItemEditorMenu()); // Print out the menu and initialize 'option' variable with the int returned
+                // Print out the passed menu, and return the input from the user
+                option = printMenuReturnInput(this.menuController.getItemEditorMenu());
+                // Update the ListItem with the selected option
                 updateItem(listItemSelected, option);
 
                 System.out.println(listItemSelected.getTitle() + " has been updated and saved.");
             } while (option != 5);
-        } catch (ListItemNotFoundException e) {
+        } catch (ListItemNotFoundException | InvalidItemTitleException e) {
             e.printStackTrace();
         }
     }
@@ -82,9 +94,13 @@ public class ToDoController {
      * @param option selected
      */
     private void updateItem(ListItem item, int option) {
+        // Print the ListItem
         toDoList.printItem(item);
+        // Remove the ListItem from the database while it's being updated
         this.toDoList.removeListItem(item);
+        // Begin editing the ListItem
         selectFromEditorMenu(item, option);
+        // Insert the ListItem back into the database
         this.toDoList.updateListItem(item);
     }
 
@@ -95,13 +111,17 @@ public class ToDoController {
      */
     private void updateItemStatus(ListItem item) {
         int option;
+        // Print the ListItem
         toDoList.printItem(item);
+        // Print out the passed menu, and return the input from the user
         option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
 
         if (option < 4 && option > 0) {
             try {
-                ItemStatus status = ItemStatus.getStatus(option - 1); // Retrieve the ItemStatus at the index specified.
-                item.setStatus(status); // Update the items status
+                // Retrieve the ItemStatus at the index specified. (-1 since the values begin at index '0')
+                ItemStatus status = ItemStatus.getStatus(option - 1);
+                // Update the items status
+                item.setStatus(status);
             } catch (InvalidItemStatusException e) {
                 e.printStackTrace();
             }
@@ -131,15 +151,9 @@ public class ToDoController {
      */
     private void selectFromEditorMenu(ListItem listItem, int option) {
         switch (option) {
-            case 1 -> listItem.setTitle(this.reader.getNextText("\nEnter a new list item title")); // Sets the item title with the value returned from the reader
-            case 2 -> listItem.setText(this.reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
-            case 3 -> {
-                try {
-                    this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
-                } catch (InvalidDateTimeFormatException e) {
-                    e.printStackTrace();
-                }
-            }
+            case 1 -> this.toDoList.updateTitle(listItem, reader); // Sets the item title with the value returned from the reader
+            case 2 -> listItem.setDescription(this.reader.getNextText("\nEnter a new description")); // Sets the item description with the value returned from the reader
+            case 3 -> this.toDoList.addDueDate(this.reader, listItem); // Sets the item due date with the value returned from the reader
             case 4 -> updateItemStatus(listItem); // Calls the method to print out, and handle the updateItemStatus menu
         }
     }
@@ -151,6 +165,11 @@ public class ToDoController {
      * @return int provided by the user
      */
     private int printMenuReturnInput(String menu) {
-        return this.menuController.requestUserOption(menu, this.reader);
+        try {
+            return this.menuController.requestUserOption(menu, this.reader);
+        }catch (InvalidOptionException e){
+            e.printStackTrace();
+        }
+        return -999;
     }
 }

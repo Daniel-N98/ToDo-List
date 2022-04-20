@@ -40,8 +40,11 @@ public class ToDoListRepository {
     public void addListItem(ListItem item) {
         openConnection();
         try {
+            // Prepare the statement to be executed
             PreparedStatement statement = this.connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
+            // Insert item properties as parameters to the statement
             addItemToStatementParams(statement, item);
+            // Execute the PreparedStatement
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,6 +108,7 @@ public class ToDoListRepository {
 
                 LocalDateTime timeStamp = DateParser.parseStringToLocalDateTime(set.getString("timestamp").replace("T", " "), "yyyy-MM-dd HH:mm:ss");
                 LocalDateTime dueDate = !dueDateStr.equals("None") ? DateParser.parseStringToLocalDateTime(dueDateStr, "yyyy-MM-dd HH:mm") : null;
+                // Create the ListItem object with the ResultSet elements
                 item = new ListItem(set.getString("title"),
                         set.getString("description"),
                         timeStamp,
@@ -112,6 +116,7 @@ public class ToDoListRepository {
                         ItemStatus.valueOf(set.getString("status")));
                 return item;
             }
+            // ResultSet is empty
             throw new ListItemNotFoundException("Item '" + title + "' cannot be found");
         } catch (InvalidDateTimeFormatException | SQLException e) {
             e.printStackTrace();
@@ -130,6 +135,7 @@ public class ToDoListRepository {
     public boolean doesListItemExist(String title) {
         openConnection();
         try {
+            // Returns true if the returned ResultSet has next
             return executeStatement("Select * from sql4486328.ToDoList WHERE title=?", title).next();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -150,6 +156,7 @@ public class ToDoListRepository {
         try {
             ResultSet set = executeStatement("Select title from sql4486328.ToDoList", "");
             while (set.next()) {
+                // Get the ListItem from the title, and add it to the List.
                 ListItem item = getItemByTitle(set.getString("title"));
                 listItems.add(item);
             }
@@ -177,6 +184,7 @@ public class ToDoListRepository {
         if (params[0].length() > 0) {
             for (int i = 0; i < params.length; i++) {
                 try {
+                    // Set the parameters for the statement (+1 since the parameters begin at index '1')
                     preparedStatement.setString((i + 1), params[i]);
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -194,12 +202,15 @@ public class ToDoListRepository {
      * @throws SQLException error
      */
     private void addItemToStatementParams(PreparedStatement statement, ListItem item) throws SQLException {
+        // Declare the properties of the ListItem ready to be inserted into the statement
         String title = item.getTitle();
-        String description = item.getText();
-        String timestamp = item.getTimestamp().truncatedTo(ChronoUnit.SECONDS).toString();
+        String description = item.getDescription();
+        String timestamp = item.getTimestamp().toString();
+        // The DueDate may not have been set by the user, if it has not, then instantiate the String to 'None'
         String dueDate = (item.getDueDate() == null ? "None" : item.getDueDate().toString());
 
         ItemStatus status = item.getStatus();
+        // Set statement parameters equal to each of the ListItem's properties.
         statement.setString(1, title);
         statement.setString(2, description);
         statement.setString(3, timestamp);
