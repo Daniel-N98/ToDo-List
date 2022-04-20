@@ -16,6 +16,7 @@ public enum ItemStatus {
      */
     public static ItemStatus getStatus(int index) throws InvalidItemStatusException {
         try {
+            // Returns the value at the index parameter
             return values()[index];
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidItemStatusException("Invalid item status");

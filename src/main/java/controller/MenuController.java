@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InvalidOptionException;
 import util.InputReader;
 
 public class MenuController {
@@ -58,14 +59,19 @@ public class MenuController {
      *
      * @param reader to read user input from
      * @return int integer entered by user, or -1
+     * @throws InvalidOptionException if a non-int value is provided, or the int is not a menu option
      */
-    public int requestUserOption(String menu, InputReader reader) {
+    public int requestUserOption(String menu, InputReader reader) throws InvalidOptionException {
         System.out.println(menu);
         try {
-            return Integer.parseInt(reader.getNextText("\nEnter an option:")); // Option was parsed to an Integer, and can be returned
+            int option = Integer.parseInt(reader.getNextText("\nEnter an option:"));
+            if (option <= 0 || option >= 7) {
+                throw new InvalidOptionException("Invalid option.");
+            }
+            // Option was parsed to an Integer, and can be returned
+            return option;
         } catch (NumberFormatException e) {
-            System.out.println("\nInvalid option");
-            return -1; // Option was not of the correct data type
+            throw new InvalidOptionException("Option must be a number.");
         }
     }
 }

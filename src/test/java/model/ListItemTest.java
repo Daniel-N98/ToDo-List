@@ -23,7 +23,7 @@ class ListItemTest {
         ListItem createListItem = new ListItem("Title", "Description", ItemStatus.PENDING);
         assertNotNull(createListItem);
         assertEquals("Title", createListItem.getTitle());
-        assertEquals("Description", createListItem.getText());
+        assertEquals("Description", createListItem.getDescription());
         assertEquals(ItemStatus.PENDING, createListItem.getStatus());
     }
 
@@ -48,7 +48,7 @@ class ListItemTest {
         // Assert all the properties are as expected
         assertNotNull(allArgsItem);
         assertEquals("Title", allArgsItem.getTitle());
-        assertEquals("Description", allArgsItem.getText());
+        assertEquals("Description", allArgsItem.getDescription());
         assertEquals(now, allArgsItem.getTimestamp());
         assertEquals("2021-01-01T22:20", allArgsItem.getDueDate().toString());
         assertEquals(ItemStatus.PROGRESS, allArgsItem.getStatus());

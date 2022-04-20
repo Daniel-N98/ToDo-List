@@ -2,6 +2,7 @@ package controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import exceptions.InvalidItemTitleException;
 import exceptions.ListItemNotFoundException;
 import model.ListItem;
 import model.ToDoList;
@@ -25,7 +26,7 @@ class ToDoControllerTest {
      * @throws ListItemNotFoundException if the item does not exist
      */
     @Test
-    void addToDoItemTest() throws ListItemNotFoundException {
+    void addToDoItemTest() throws ListItemNotFoundException, InvalidItemTitleException {
         String[] inputLines = {"2", "New Title", // Add to your to-do list | Title
                 "New Description", // Description
                 "2021-04-01 14:25", // Due date
@@ -78,7 +79,7 @@ class ToDoControllerTest {
      * works as intended.
      */
     @Test
-    void updateToDoListTest() throws ListItemNotFoundException {
+    void updateToDoListTest() throws ListItemNotFoundException, InvalidItemTitleException {
         // Creates and stores an example ListItem in the database with the name "Example list item"
         ListItem item = TestUtil.createExampleItem();
 
@@ -100,7 +101,7 @@ class ToDoControllerTest {
 
         // Assert the properties have been updated to what was set above.
         assertEquals("New title", updatedItem.getTitle());
-        assertEquals("New description", updatedItem.getText());
+        assertEquals("New description", updatedItem.getDescription());
         assertEquals("2021-01-01T05:15", updatedItem.getDueDate().toString());
         assertEquals(ItemStatus.COMPLETED, updatedItem.getStatus());
     }
