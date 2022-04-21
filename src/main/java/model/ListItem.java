@@ -37,7 +37,7 @@ public class ListItem {
      * Instantiates the timestamp variable with the current date & time
      */
     public ListItem() {
-        this.timestamp = LocalDateTime.now(); // Instantiate the timestamp variable with the current date & time
+        this.timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES); // Instantiate the timestamp variable with the current date & time
         this.status = ItemStatus.PENDING; // Item status is instantiated to PENDING as default
     }
 
@@ -84,7 +84,7 @@ public class ListItem {
         return "=".repeat(30) +
                 "\nTitle: [" + this.title +
                 "]\n\nDescription: [" + WordUtils.wrap(this.description, 90) +
-                "]\n\nCreated: [" + this.timestamp.toString() +
+                "]\n\nCreated: [" + this.timestamp.truncatedTo(ChronoUnit.MINUTES).toString().replace("T", " ") +
                 (this.dueDate != null ? "]\nDue date: [" + this.dueDate.toString().replace("T", " ") : "") +
                 "]\nStatus: [" + this.status + "]\n";
     }

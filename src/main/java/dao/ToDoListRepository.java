@@ -106,7 +106,7 @@ public class ToDoListRepository {
             if (set.next()) {
                 String dueDateStr = set.getString("dueDate").replace("T", " ");
 
-                LocalDateTime timeStamp = DateParser.parseStringToLocalDateTime(set.getString("timestamp").replace("T", " "), "yyyy-MM-dd HH:mm:ss");
+                LocalDateTime timeStamp = DateParser.parseStringToLocalDateTime(set.getString("timestamp").replace("T", " "), "yyyy-MM-dd HH:mm");
                 LocalDateTime dueDate = !dueDateStr.equals("None") ? DateParser.parseStringToLocalDateTime(dueDateStr, "yyyy-MM-dd HH:mm") : null;
                 // Create the ListItem object with the ResultSet elements
                 item = new ListItem(set.getString("title"),
