@@ -1,6 +1,5 @@
 package model;
 
-import exceptions.InvalidDateTimeFormatException;
 import exceptions.InvalidItemTitleException;
 import exceptions.ListItemNotFoundException;
 import org.junit.jupiter.api.AfterEach;
