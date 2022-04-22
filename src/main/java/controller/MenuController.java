@@ -3,10 +3,10 @@ package controller;
 import exceptions.InvalidOptionException;
 import util.InputReader;
 
-public class MenuController {
+class MenuController {
 
     // The welcome message for the application
-    public final static String TITLE = """
+    protected final static String TITLE = """
             \nWelcome to the TO-DO List application
             To get started, enter one of the following options
                             

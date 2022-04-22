@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class DBConnector {
+class DBConnector {
 
     private Connection connection;
 
@@ -15,7 +15,7 @@ public class DBConnector {
      * Constructor for the DBConnector class
      * begins the connection process
      */
-    public DBConnector() {
+    protected DBConnector() {
         connect();
     }
 

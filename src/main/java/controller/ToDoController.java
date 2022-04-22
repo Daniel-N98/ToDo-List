@@ -11,7 +11,10 @@ import model.ListItem;
 
 public class ToDoController {
 
+    // Declare the InputReader, used to read user input
     private final InputReader reader;
+
+    // Declare the ToDoList, controls ListItem Objects
     private final ToDoList toDoList;
 
     // Instantiate the MenuController
@@ -41,10 +44,15 @@ public class ToDoController {
         // Print out the initial starting message of the application
         System.out.println(MenuController.TITLE);
         do {
-            // Prints out the provided menu, and returns the input from the user
-            option = printMenuReturnInput(this.menuController.getMainMenu());
-            // Select the menu based on user input
-            selectMenu(option);
+            try {
+                // Prints out the provided menu, and returns the input from the user
+                option = printMenuReturnInput(this.menuController.getMainMenu());
+                // Select the menu based on user input
+                selectMenu(option);
+            } catch (InvalidOptionException e) {
+                e.printStackTrace();
+                option = 0;
+            }
         } while (option != 6);
     }
 
@@ -82,7 +90,7 @@ public class ToDoController {
 
                 System.out.println(listItemSelected.getTitle() + " has been updated and saved.");
             } while (option != 5);
-        } catch (ListItemNotFoundException | InvalidItemTitleException e) {
+        } catch (ListItemNotFoundException | InvalidItemTitleException | InvalidOptionException e) {
             e.printStackTrace();
         }
     }
@@ -90,7 +98,7 @@ public class ToDoController {
     /**
      * Perform updates on the item with the selected option
      *
-     * @param item to be edited
+     * @param item   to be edited
      * @param option selected
      */
     private void updateItem(ListItem item, int option) {
@@ -113,18 +121,15 @@ public class ToDoController {
         int option;
         // Print the ListItem
         toDoList.printItem(item);
-        // Print out the passed menu, and return the input from the user
-        option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
-
-        if (option < 4 && option > 0) {
-            try {
-                // Retrieve the ItemStatus at the index specified. (-1 since the values begin at index '0')
-                ItemStatus status = ItemStatus.getStatus(option - 1);
-                // Update the items status
-                item.setStatus(status);
-            } catch (InvalidItemStatusException e) {
-                e.printStackTrace();
-            }
+        try {
+            // Print out the passed menu, and return the input from the user
+            option = printMenuReturnInput(this.menuController.getStatusEditorMenu());
+            // Retrieve the ItemStatus at the index specified. (-1 since the values begin at index '0')
+            ItemStatus status = ItemStatus.getStatus(option - 1);
+            // Update the items status
+            item.setStatus(status);
+        } catch (InvalidItemStatusException | InvalidOptionException e) {
+            e.printStackTrace();
         }
     }
 
@@ -163,13 +168,9 @@ public class ToDoController {
      *
      * @param menu to print out
      * @return int provided by the user
+     * @throws InvalidOptionException if the user enters an invalid option
      */
-    private int printMenuReturnInput(String menu) {
-        try {
-            return this.menuController.requestUserOption(menu, this.reader);
-        }catch (InvalidOptionException e){
-            e.printStackTrace();
-        }
-        return -999;
+    private int printMenuReturnInput(String menu) throws InvalidOptionException {
+        return this.menuController.requestUserOption(menu, this.reader);
     }
 }
