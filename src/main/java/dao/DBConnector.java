@@ -65,7 +65,7 @@ class DBConnector {
      *
      * @return connection
      */
-    public Connection getConnection() {
+    protected Connection getConnection() {
         return this.connection;
     }
 }

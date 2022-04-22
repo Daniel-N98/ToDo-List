@@ -17,7 +17,7 @@ class MenuController {
      *
      * @return mainMenu
      */
-    public String getMainMenu() {
+    protected String getMainMenu() {
         return """
                 \n1. View your to-do list
                 2. Add to your to-do list
@@ -31,7 +31,7 @@ class MenuController {
      *
      * @return itemEditorMenu
      */
-    public String getItemEditorMenu() {
+    protected String getItemEditorMenu() {
         return """
                 \n1. Edit title
                 2. Edit description
@@ -45,7 +45,7 @@ class MenuController {
      *
      * @return statusEditorMenu
      */
-    public String getStatusEditorMenu() {
+    protected String getStatusEditorMenu() {
         return """
                 \n1. PENDING
                 2. PROGRESS
@@ -61,7 +61,7 @@ class MenuController {
      * @return int integer entered by user, or -1
      * @throws InvalidOptionException if a non-int value is provided, or the int is not a menu option
      */
-    public int requestUserOption(String menu, InputReader reader) throws InvalidOptionException {
+    protected int requestUserOption(String menu, InputReader reader) throws InvalidOptionException {
         System.out.println(menu);
         try {
             int option = Integer.parseInt(reader.getNextText("\nEnter an option:"));
