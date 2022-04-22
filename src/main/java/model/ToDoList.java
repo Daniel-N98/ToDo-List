@@ -151,7 +151,7 @@ public class ToDoList {
      */
     public void printItem(ListItem item) {
         try {
-            System.out.println(item.toString());
+            System.out.println(item);
         } catch (NullPointerException e) {
             System.out.println("Item '" + "' cannot be found");
         }
