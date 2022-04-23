@@ -40,7 +40,7 @@ public class ToDoListRepository {
         openConnection();
         try {
             // Prepare the statement to be executed
-            PreparedStatement statement = this.connection.prepareStatement("INSERT INTO sql4486328.ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
+            PreparedStatement statement = this.connection.prepareStatement("INSERT INTO ToDoList (title,description,timestamp,dueDate,status) VALUES (?,?,?,?,?)");
             // Insert item properties as parameters to the statement
             addItemToStatementParams(statement, item);
             // Execute the PreparedStatement
@@ -61,7 +61,7 @@ public class ToDoListRepository {
     public void removeListItem(String title) throws ListItemNotFoundException {
         openConnection();
         try {
-            PreparedStatement statement = this.connection.prepareStatement("DELETE FROM sql4486328.ToDoList WHERE title=?");
+            PreparedStatement statement = this.connection.prepareStatement("DELETE FROM ToDoList WHERE title=?");
             statement.setString(1, title);
 
             if (statement.executeUpdate() == 0) {
@@ -81,7 +81,7 @@ public class ToDoListRepository {
     public void removeAllItems() {       // In this situation, we are sure we want to clear it.
         openConnection();
         try {
-            PreparedStatement statement = this.connection.prepareStatement("DELETE FROM sql4486328.ToDoList");
+            PreparedStatement statement = this.connection.prepareStatement("DELETE FROM ToDoList");
             statement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +101,7 @@ public class ToDoListRepository {
         openConnection();
         ListItem item;
         try {
-            ResultSet set = executeStatement("SELECT * FROM sql4486328.ToDoList where title=?", title);
+            ResultSet set = executeStatement("SELECT * FROM ToDoList where title=?", title);
             if (set.next()) {
                 String dueDateStr = set.getString("dueDate").replace("T", " ");
 
@@ -135,7 +135,7 @@ public class ToDoListRepository {
         openConnection();
         try {
             // Returns true if the returned ResultSet has next
-            return executeStatement("Select * from sql4486328.ToDoList WHERE title=?", title).next();
+            return executeStatement("Select * from ToDoList WHERE title=?", title).next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -153,7 +153,7 @@ public class ToDoListRepository {
         openConnection();
         List<ListItem> listItems = new ArrayList<>();
         try {
-            ResultSet set = executeStatement("Select title from sql4486328.ToDoList", "");
+            ResultSet set = executeStatement("Select title from ToDoList", "");
             while (set.next()) {
                 // Get the ListItem from the title, and add it to the List.
                 ListItem item = getItemByTitle(set.getString("title"));
