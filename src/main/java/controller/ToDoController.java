@@ -54,6 +54,7 @@ public class ToDoController {
                 option = 0;
             }
         } while (option != 6);
+        System.out.println("Exiting the application...");
     }
 
     /**
