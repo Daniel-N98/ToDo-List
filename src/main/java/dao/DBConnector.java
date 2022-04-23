@@ -1,7 +1,6 @@
 package dao;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,9 +28,9 @@ class DBConnector {
             if (details == null) {
                 return;
             }
-            //String url = "jdbc:mysql://localhost:3306/";
-            String url  = "jdbc:mysql://sql4.freesqldatabase.com/";
-            this.connection = DriverManager.getConnection(url + details[0], details[1], details[2]);
+            String url  = details[0]; // db.host from the DB details file. jdbc:mysql://serverName/
+            // Gets the connection.                                 DB name     User        Password
+            this.connection = DriverManager.getConnection(url + details[1], details[2], details[3]);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,15 +43,16 @@ class DBConnector {
      */
     private String[] getDBDetails() {
         try {
-            String connFilePath = "src/main/java/resources/connParams.txt";
-            Scanner scanner = new Scanner(new File(connFilePath));
-            String[] details = new String[3];
-            scanner.useDelimiter(", ");
-            details[0] = scanner.next();
-            details[1] = scanner.next();
-            details[2] = scanner.next();
+            String connFilePath = "src/main/java/resources/connParams.txt"; // Path to the file containing DB details
+            Scanner scanner = new Scanner(new File(connFilePath)); // Opens the scanner
+            String[] details = new String[4];
+            int counter = 0;
+            while (scanner.hasNextLine()){
+                // Store the details from the DB details file into the Array. Split the nextLine and get the second (1st) element.
+                details[counter++] = scanner.nextLine().split(" = ")[1];
+            }
 
-            scanner.close();
+            scanner.close(); // Close the scanner
             return details;
         } catch (FileNotFoundException e) {
             e.printStackTrace();

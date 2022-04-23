@@ -1,1 +1,4 @@
-todolist, root, Password123
+db.host = jdbc:mysql://serverName/
+db.name = databaseName
+db.user = username
+db.password = password

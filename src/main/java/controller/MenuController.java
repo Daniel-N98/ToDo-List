@@ -23,7 +23,8 @@ class MenuController {
                 2. Add to your to-do list
                 3. Remove from your to-do list
                 4. Clear to-do list
-                5. Update to-do list""";
+                5. Update to-do list
+                6. Exit application""";
     }
 
     /**
